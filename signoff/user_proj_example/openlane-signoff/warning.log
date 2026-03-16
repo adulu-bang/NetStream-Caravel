@@ -1,0 +1,83 @@
+8 Lint warnings found.
+'PNR_SDC_FILE' is not defined. Using generic fallback SDC for OpenROAD PnR steps.
+'SIGNOFF_SDC_FILE' is not defined. Using generic fallback SDC for OpenROAD PnR steps.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[GRT-0097] No global routing found for nets.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[CTS-0041] Net "wb_clk_i" has 1 sinks. Skipping...
+[RSZ-0065] max wire length less than 5786u increases wire delays.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[GRT-0097] No global routing found for nets.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[GRT-0097] No global routing found for nets.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer mcon
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer mcon
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer via
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer via
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer via2
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer via2
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer via3
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer via3
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer via4
+[DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer via4
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+Threshold for Threshold-surpassing long wires is not set. The checker will be skipped.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+'VSRC_LOC_FILES' was not given a value, which may make the results of IR drop analysis inaccurate. If you are not integrating a top-level chip for manufacture, you may ignore this warning, otherwise, see the documentation for 'VSRC_LOC_FILES'.
+[STA-0366] port 'user_irq[*]' not found.
+[STA-0366] port 'user_irq[*]' not found.
+Cell 'user_proj_example' has (286) input pin(s) without antenna gate information. They might not be connected to a gate.
+Cell 'user_proj_example' has (131) output pin(s) without antenna diffusion information. They might not be driven.
+Max Slew violations found in the following corners:
+* max_ss_100C_1v60
+* max_tt_025C_1v80
+* min_ss_100C_1v60
+* nom_ss_100C_1v60
+* nom_tt_025C_1v80
+Max Cap violations found in the following corners:
+* max_ss_100C_1v60
+* nom_ss_100C_1v60
