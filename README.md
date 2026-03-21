@@ -1,4 +1,4 @@
-# NetStream: Edge Network Packet-Processing SoC (Caravel-Based)
+# NetStream: Caravel-Based Edge Network Packet-Processing Accelerator
 
 ##  Overview
 
