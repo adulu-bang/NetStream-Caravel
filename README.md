@@ -152,7 +152,9 @@ Simulation waveforms have been used to verify:
 - Synchronization between packet buffering and action resolution  
 - Timing of control signals (valid, ready, last)  
 
-*(Representative waveform results will be included to illustrate pipeline behavior.)*
+### Packet Processing and Action Application
+
+![Waveform showing packet rewrite and action synchronization](docs/images/waveform.png)
 
 ### Gate-Level and Timing Verification
 
