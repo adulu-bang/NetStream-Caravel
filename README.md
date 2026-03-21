@@ -2,11 +2,13 @@
 
 ##  Overview
 
-NetStream is a custom silicon-based network packet processing accelerator designed for edge IoT and industrial gateway applications.
+NetStream is a custom network packet-processing accelerator designed for edge IoT and industrial gateway applications, implemented within the Caravel SoC framework.
 
-The project aims to deliver a low-cost, programmable hardware module capable of real-time packet inspection, filtering, and telemetry extraction, integrated within the Caravel SoC framework.
+Edge devices today need to handle increasing volumes of network traffic while operating under tight latency, power, and cost constraints. Software-based packet processing on embedded processors often becomes a bottleneck, limiting real-time responsiveness and scalability in applications such as industrial monitoring, secure edge gateways, and smart infrastructure.
 
-Unlike traditional software-based packet processing, NetStream offloads critical networking tasks into dedicated hardware, reducing latency, improving throughput, and lowering CPU overhead.
+NetStream has been designed to addresses this challenge by introducing a dedicated hardware offload engine that accelerates packet inspection, classification, and action handling. By moving these tasks from software into hardware, the system achieves lower latency, higher throughput, and reduced CPU load under low-power constraints for edge devices.
+
+The design is integrated with the Caravel management SoC, allowing programmable control and system-level integration. NetStream is intended to function as part of a complete edge networking system, interfacing with external Ethernet MAC and PHY components on a PCB.
 
 ---
 
