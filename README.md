@@ -54,25 +54,25 @@ At a high level, packets enter the system from an external Ethernet PHY via a MA
 
 ### Packet Processing Pipeline
 
-1. **Ingress Interface & Buffering**  
+- **Ingress Interface & Buffering**  
    Incoming packet data is received through the MAC interface and buffered using an ingress FIFO to decouple I/O timing from internal processing.
 
-2. **Header Extraction & Parsing**  
+- **Header Extraction & Parsing**  
    The packet stream is fed into a parser FSM that extracts relevant header fields (e.g., protocol, addresses, ports) and formats them into structured metadata.
 
-3. **Key Generation**  
+- **Key Generation**  
    A key builder module constructs a lookup key from the extracted metadata, which is used for rule matching.
 
-4. **Rule Matching Engine**  
+- **Rule Matching Engine**  
    The generated key is matched against a programmable rule table (TCAM-based rule maatching is done) , enabling fast, parallel classification of packets based on pre-defined policies.
 
-5. **Action Engine**  
+- **Action Engine**  
    Based on the matched rule, an action is selected from an action memory. Eamples of supported actions include forwarding, dropping, tagging, or modifying packet metadata.
 
-6. **Packet Buffering & Action Application**  
+- **Packet Buffering & Action Application**  
    In parallel with header processing, the full packet is being stored in a data FIFO. Once the corresponding action decision is available, the packet stored is forwarded from the FIFO to an action multiplexer which applies the selected operation to the buffered packet.
 
-7. **Egress Path**  
+- **Egress Path**  
    The processed packet is transmitted through the egress interface back to the MAC and subsequently to the external PHY.
 
 ### Key Architectural Characteristics
@@ -156,16 +156,16 @@ Within the overall system, Caravel provides programmability and system control, 
 
 ## Target Applications
 
-#### - Industrial Secure Gateway
+- **Industrial Secure Gateway**
 NetStream enables deterministic, low-latency filtering of industrial network traffic by enforcing strict rule-based communication policies at the gateway level.
 
-#### - Traffic Prioritization (QoS)
+- **Traffic Prioritization (QoS)**
 The design supports real-time classification and prioritization of packets, ensuring that critical control data is transmitted with minimal delay.
 
-#### - Edge IoT Data Filtering
+- **Edge IoT Data Filtering**
 NetStream reduces bandwidth and processing overhead by filtering and processing IoT traffic locally before transmission to the cloud.
 
-#### - Hardware Firewall
+- **Hardware Firewall**
 The match-action pipeline enables efficient rule-based packet filtering for secure edge deployments.
 
 ---
