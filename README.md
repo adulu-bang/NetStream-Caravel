@@ -102,16 +102,16 @@ The design is controlled via the Caravel RISC-V management core using the Wishbo
 
 ## Target Applications
 
-### Industrial Secure Gateway
+### 1) Industrial Secure Gateway
 NetStream enables deterministic, low-latency filtering of industrial network traffic by enforcing strict rule-based communication policies at the gateway level.
 
-### Traffic Prioritization (QoS)
+### 2) Traffic Prioritization (QoS)
 The design supports real-time classification and prioritization of packets, ensuring that critical control data is transmitted with minimal delay.
 
-### Edge IoT Data Filtering
+### 3) Edge IoT Data Filtering
 NetStream reduces bandwidth and processing overhead by filtering and processing IoT traffic locally before transmission to the cloud.
 
-### Hardware Firewall
+### 4) Hardware Firewall
 The match-action pipeline enables efficient rule-based packet filtering for secure edge deployments.
 
 ---
