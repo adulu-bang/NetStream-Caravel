@@ -48,29 +48,75 @@ Overall, NetStream transforms packet processing from a software-driven, memory-b
 
 ## System Architecture
 
-### On-Chip Components:
-- Packet Parser Engine
-- Rule Matching Engine (TCAM-like logic or simplified matcher)
-- Flow Counter Unit
-- Control Interface (Wishbone slave)
+NetStream is designed as a streaming hardware datapath integrated within the Caravel user project area, with a clear separation between the control plane (Caravel management SoC) and the data plane (Custom NetStream pipeline).
 
-### Off-Chip Components (PCBA):
-- Ethernet PHY (RMII/MII interface)
-- Power management
-- Optional microcontroller for system integration
+At a high level, packets enter the system from an external Ethernet PHY via a MAC interface, which presents packet data as a byte stream along with standard handshake signals (valid, ready, last).
 
-### Firmware:
-- Rule configuration API
-- Monitoring interface
-- Debug utilities
+### Packet Processing Pipeline
 
+1. **Ingress Interface & Buffering**  
+   Incoming packet data is received through the MAC interface and buffered using an ingress FIFO to decouple I/O timing from internal processing.
+
+2. **Header Extraction & Parsing**  
+   The packet stream is fed into a parser FSM that extracts relevant header fields (e.g., protocol, addresses, ports) and formats them into structured metadata.
+
+3. **Key Generation**  
+   A key builder module constructs a lookup key from the extracted metadata, which is used for rule matching.
+
+4. **Rule Matching Engine**  
+   The generated key is matched against a programmable rule table (TCAM-based rule maatching is done) , enabling fast, parallel classification of packets based on pre-defined policies.
+
+5. **Action Engine**  
+   Based on the matched rule, an action is selected from an action memory. Eamples of supported actions include forwarding, dropping, tagging, or modifying packet metadata.
+
+6. **Packet Buffering & Action Application**  
+   In parallel with header processing, the full packet is being stored in a data FIFO. Once the corresponding action decision is available, the packet stored is forwarded from the FIFO to an action multiplexer which applies the selected operation to the buffered packet.
+
+7. **Egress Path**  
+   The processed packet is transmitted through the egress interface back to the MAC and subsequently to the external PHY.
+
+### Key Architectural Characteristics
+
+- **Streaming, Line-Rate Processing:**  
+  Packets are processed in a pipelined manner without stalling on memory accesses.
+
+- **Deterministic Latency:**  
+  Fixed processing stages ensure predictable timing, critical for industrial applications. Since the packet is forwarded for the action as soona as the action arrives, the latency does not depend on the packet length, and has been calculated to be ~220 clock cycles in the worst case.
+
+- **Decoupled Data and Control Planes:**  
+  The datapath operates independently of the control logic, enabling efficient hardware acceleration. The control plane doesn't touch the packets in real-time, all the packet-processing is offloaded to the hardware.
+
+- **Programmable Behavior:**  
+  Rule tables and actions can be dynamically configured without modifying the hardware pipeline.
 ---
 
-##  Integration with Caravel
+## Integration with Caravel
 
-- Uses Wishbone bus for configuration and control
-- Interfaces with GPIO for packet I/O (or external PHY)
-- Integrated into `user_project_wrapper`
+NetStream is implemented within the Caravel user project area and interfaces with the Caravel management SoC through the Wishbone bus.
+
+### Control Plane Integration
+
+The Caravel management SoC, which includes a RISC-V processor, serves as the control plane for NetStream. It is responsible for:
+
+- Configuring TCAM rule tables for packet classification  
+- Updating action memory entries  
+- Monitoring flow statistics
+- Managing system-level control and debugging  
+
+All configuration and control operations are performed via memory-mapped registers exposed through a Wishbone slave interface implemented in the NetStream design.
+
+### Data Plane Independence
+
+The NetStream datapath operates independently of the Caravel CPU, ensuring that packet processing continues at line rate without CPU intervention. The CPU is only involved in control and configuration, not in per-packet processing.
+
+### I/O Integration
+
+- Packet I/O is interfaced through GPIO or dedicated user I/O pins connected to an external Ethernet MAC/PHY.  
+- The design is integrated into the `user_project_wrapper`, adhering to Caravel’s standard interface requirements.
+
+### System-Level Role
+
+Within the overall system, Caravel provides programmability and system control, while NetStream functions as a dedicated hardware accelerator for packet processing. This separation enables efficient and scalable edge networking solutions.
 
 ---
 
