@@ -121,7 +121,7 @@ Within the overall system, Caravel provides programmability and system control, 
 ---
 
 ## Block Diagram Of Architecture
-[(docs/images/final_BD_netstream.png)]
+![Block Diagram](docs/images/final_BD_netstream.png)
 
 ## Verification Plan
 
