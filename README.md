@@ -120,6 +120,9 @@ Within the overall system, Caravel provides programmability and system control, 
 
 ---
 
+## Block Diagram Of Architecture
+(docs/images/final_BD_netstream.png)
+
 ## Verification Plan
 
 An initial version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow and control mechanisms.
