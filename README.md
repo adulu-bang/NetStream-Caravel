@@ -30,16 +30,19 @@ As edge systems demand faster, more deterministic, and energy-efficient networki
 
 ---
 
-##  Proposed Solution
+## Proposed Solution
 
-NetStream introduces a hardware packet-processing pipeline integrated into the Caravel user area, enabling:
+NetStream addresses the limitations of software-based packet processing by introducing a hardware-accelerated, streaming packet-processing pipeline integrated within the Caravel user project area.
 
-- Line-rate packet parsing
-- Configurable filtering rules
-- Protocol-aware inspection
-- Telemetry extraction (flow stats, counters)
+The core design philosophy is based on a clear separation between the control plane and the data plane. The Caravel RISC-V management core acts as the control plane, responsible for configuring rules and actions, updating policies, and monitoring system behavior. In contrast, the NetStream datapath operates as a dedicated data plane, performing packet parsing, classification, and action execution entirely in hardware.
 
-The design is controlled via the Caravel RISC-V management core using the Wishbone interface.
+By structuring the design as a streaming pipeline, NetStream processes packets in a deterministic, stage-by-stage manner without relying on large memory accesses or complex software routines. Each packet flows through a sequence of hardware stages that extract relevant fields, generate lookup keys, match against rule sets parallely, and apply corresponding actions such as dropping, rewriting or forwarding.
+
+This approach eliminates the cache inefficiencies and memory bottlenecks associated with CPU-based processing, enabling line-rate performance with deterministic latency and significantly reduced CPU overhead.
+
+The system is fully programmable by the RISCV processor through the Wishbone interface, allowing dynamic updates to filtering rules, classification policies, and monitoring parameters without modifying the hardware datapath.
+
+Overall, NetStream transforms packet processing from a software-driven, memory-bound workload into a hardware-accelerated, deterministic process suitable for edge and industrial networking environments.
 
 ---
 
