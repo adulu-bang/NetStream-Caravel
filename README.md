@@ -12,16 +12,21 @@ The design is integrated with the Caravel management SoC, allowing programmable 
 
 ---
 
-##  Problem Statement
+## Problem Statement
 
-Edge devices and industrial gateways increasingly require:
+Modern edge devices and industrial gateways are increasingly required to perform real-time network functions such as packet filtering, traffic prioritization (QoS), and secure flow enforcement. These operations rely on rule-based processing, where each incoming packet must be parsed, classified, and matched against large rule tables.
 
-- Real-time packet filtering and routing
-- Low-latency decision making
-- Energy-efficient networking
-- On-device telemetry and monitoring
+In conventional software-based implementations, these tasks are executed on general-purpose CPUs. However, packet processing workloads exhibit poor cache locality and irregular memory access patterns, especially when dealing with large rule sets for firewalling, QoS policies, and flow management. As a result, frequent cache misses and memory accesses introduce significant latency and reduce throughput.
 
-Software-based solutions are often too slow or power-hungry for constrained environments.
+Additionally, packet processing involves branch-heavy logic and per-packet decision making, which further limits CPU efficiency and scalability under high traffic conditions. In edge and industrial environments, where devices operate under strict power, cost, and real-time constraints, these inefficiencies become critical bottlenecks.
+
+This leads to several challenges:
+- Inability to sustain high-throughput packet inspection and classification
+- Increased latency in time-sensitive applications such as industrial control systems
+- Higher power consumption due to CPU-intensive processing
+- Limited scalability as rule complexity and traffic volume grow
+
+As edge systems demand faster, more deterministic, and energy-efficient networking capabilities, relying solely on software-based packet processing is no longer sufficient.
 
 ---
 
