@@ -120,39 +120,111 @@ Within the overall system, Caravel provides programmability and system control, 
 
 ---
 
-##  Verification Plan
+## Verification Plan
 
-- RTL simulation using cocotb
-- Functional testbenches for:
-  - Packet parsing
-  - Rule matching
-  - Flow counting
-- Gate-level simulation (GLS)
-- STA using OpenSTA
+An initial version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow and control mechanisms.
+
+### RTL Verification
+
+- Functional verification performed using Verilog testbenches and cocotb-based simulations  
+- Initial end-to-end validation of the packet-processing pipeline, including:
+  - Header parsing and metadata extraction  
+  - Key generation and rule matching for a limited set of rules  
+  - Action selection and packet forwarding/dropping/rewriting
+  - Basic flow counting functionality  
+
+- Test scenarios include:
+  - Valid packet streams with known rule matches  
+  - No-match conditions and default actions  
+  - Basic handshake behavior using valid/ready signaling  
+
+### Current Status
+
+The current verification covers core functionality and demonstrates correct operation of the pipeline for representative cases. Further work will expand coverage to include:
+- Larger and more complex rule sets  
+- Corner cases and stress conditions  
+- Robust backpressure and boundary scenarios  
+
+### Waveform Validation
+
+Simulation waveforms have been used to verify:
+- Correct propagation of packet data across pipeline stages  
+- Synchronization between packet buffering and action resolution  
+- Timing of control signals (valid, ready, last)  
+
+*(Representative waveform results will be included to illustrate pipeline behavior.)*
+
+### Gate-Level and Timing Verification
+
+- Gate-Level Simulation (GLS) will be performed after synthesis  
+- Static Timing Analysis (STA) will be conducted using OpenSTA as part of the OpenLane flow  
+
+This staged verification approach ensures a smooth transition from functional validation to silicon-ready design.
 
 ---
 
-##  Implementation Plan
+## Implementation Plan
 
-- RTL Design: Verilog
-- Flow: OpenLane (SKY130)
-- Verification: cocotb + Verilator
-- Physical Design: Automated via OpenLane
+NetStream is being developed iteratively, starting from a functional RTL prototype and progressing toward a fully optimized and fabrication-ready design.
+
+### RTL Design
+
+- Initial Verilog implementation of the packet-processing pipeline completed  
+- Modular structure covering parser, rule matching, action engine, and control interface  
+- Current design focuses on functional correctness and architectural validation  
+
+- Ongoing improvements include:
+  - Pipeline optimization for higher throughput  
+  - Refinement of rule matching structures  
+  - Enhanced buffering and flow control mechanisms  
+
+### Verification
+
+- Functional verification using Verilog testbenches and cocotb  
+- Simulation with Verilator for rapid iteration and debugging  
+- Gradual expansion of test coverage and complexity  
+
+### Physical Design Flow
+
+- Target process: SKY130 (130nm)  
+- RTL-to-GDSII implementation using OpenLane  
+- Includes synthesis, floorplanning, placement, routing, and timing verification  
+
+### System Integration
+
+- Integration into Caravel `user_project_wrapper`  
+- Wishbone-based control interface for rule configuration and monitoring  
+- External interfacing with Ethernet MAC/PHY as part of PCB-level system  
+
+This phased implementation approach ensures that the design evolves from a working prototype into a robust and optimized silicon solution.
+
+## Deliverables
+
+The final submission will provide a complete, reproducible reference design spanning silicon, system integration, and documentation.
+
+- **GDSII Layout:**  
+  Tapeout-ready layout generated using OpenLane (SKY130)
+
+- **RTL Source Code:**  
+  Verilog implementation of the NetStream datapath, including both the initial working prototype and refined versions  
+
+- **Verification Suite:**  
+  Testbenches for RTL and Gate-Level Simulation (GLS), along with representative waveform results demonstrating pipeline operation  
+
+- **PCBA Design:**
+
+- **Firmware:**  
+  Software for rule configuration, control, and monitoring via the Caravel management SoC  
+
+- **Documentation:**  
+  Detailed design documentation covering architecture, integration, and usage  
+
+- **Demonstration:**  
+  A system-level demonstration showcasing packet processing use-cases and real-time operation  
+
+The project aims to deliver not just a functional chip, but a complete and reproducible edge networking reference design.
 
 ---
-
-##  Deliverables
-
-- GDSII layout
-- RTL source code
-- Testbenches (RTL + GLS)
-- PCBA design (KiCad)
-- Firmware
-- Documentation and demo video
-
----
-
-##  Target Applications
 
 ## Target Applications
 
