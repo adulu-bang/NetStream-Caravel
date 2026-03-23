@@ -64,7 +64,7 @@ At a high level, packets enter the system from an external Ethernet PHY via a MA
    A key builder module constructs a lookup key from the extracted metadata, which is used for rule matching.
 
 - **Rule Matching Engine**  
-   The generated key is matched against a programmable rule table (TCAM-based rule maatching is done) , enabling fast, parallel classification of packets based on pre-defined policies.
+   The generated key is matched against a programmable rule table (TCAM-based rule matching is done) , enabling fast, parallel classification of packets based on pre-defined policies.
 
 - **Action Engine**  
    Based on the matched rule, an action is selected from an action memory. Eamples of supported actions include forwarding, dropping, tagging, or modifying packet metadata.
