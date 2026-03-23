@@ -158,7 +158,7 @@ Overall, a functional first iteration of the complete system has been realized, 
 
 ---
 
-## Verification Plan
+## Verification an Backend Plan
 
 The present version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow end to end through the dataplane.
 
@@ -200,29 +200,6 @@ Simulation waveforms have been used to verify:
 - Static Timing Analysis (STA) will be conducted using OpenSTA as part of the OpenLane flow  
 
 This staged verification approach ensures a smooth transition from functional validation to silicon-ready design.
-
----
-
-## Implementation Plan
-
-NetStream is being developed iteratively, starting from a functional RTL prototype and progressing toward a fully optimized and fabrication-ready design.
-
-### RTL Design
-
-- Initial Verilog implementation of the packet-processing pipeline completed  
-- Modular structure covering parser, rule matching, action engine, and control interface  
-- Current design focuses on functional correctness and architectural validation  
-
-- Ongoing improvements include:
-  - Pipeline optimization for higher throughput  
-  - Refinement of rule matching structures  
-  - Enhanced buffering and flow control mechanisms  
-
-### Verification
-
-- Functional verification using Verilog testbenches and cocotb  
-- Simulation with Verilator for rapid iteration and debugging  
-- Gradual expansion of test coverage and complexity  
 
 ### Physical Design Flow
 
