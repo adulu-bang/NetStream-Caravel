@@ -256,12 +256,6 @@ The final submission will provide a complete, reproducible reference design span
 - **Firmware:**  
   Software for rule configuration, control, and monitoring via the Caravel management SoC  
 
-- **Documentation:**  
-  Detailed design documentation covering architecture, integration, and usage  
-
-- **Demonstration:**  
-  A system-level demonstration showcasing packet processing use-cases and real-time operation  
-
 The project aims to deliver not just a functional chip, but a complete and reproducible edge networking reference design.
 
 ---
