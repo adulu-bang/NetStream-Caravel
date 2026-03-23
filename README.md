@@ -130,10 +130,9 @@ Within the overall system, Caravel provides programmability and system control, 
 The design has been developed iteratively from a basic single-packet pipeline to a multi-packet, pipelined packet processing system.
 
 - The **dataplane RTL** has been designed, integrated, and verified across multiple stages including parsing, key generation, TCAM matching, and action execution. It now supports **continuous packet flows with multiple packets in-flight** through pipelining.  
-- A **packet buffering system (FIFO + rewrite path)** has been integrated to enable correct synchronization between packet data and computed actions, allowing end-to-end packet handling.  
-- The **control plane (RISC-V SoC)** has been integrated with the dataplane, enabling programmability of TCAM and action memory.  
+- A **packet buffering system (FIFO + rewrite path)** has been integrated to enable correct synchronization between packet data and computed actions, allowing end-to-end packet handling.   
 - Initial **system-level verification** has been performed using testbenches covering multiple packet scenarios and action correctness.  
-- The design has also been **validated on FPGA**, with successful synthesis, implementation, and bitstream generation.
+- The design has also been **validated on Kria KR260 FPGA**, with successful synthesis, implementation, and bitstream generation.
 
 Overall, a functional first iteration of the complete system has been realized, with both dataplane and control plane working together at a basic level.
 
@@ -143,27 +142,25 @@ Overall, a functional first iteration of the complete system has been realized, 
 
 - **Synchronization across parallel datapaths** was a major challenge, especially ensuring correct mapping of actions to packets in continuous flows.  
 - Handling **valid-ready handshakes and packet boundaries** across modules led to multiple bugs and required redesigns.  
-- **Clock domain crossing and MAC interfacing** introduced timing and alignment challenges with real packet streams.  
-- The **AXI-based control plane integration** required careful debugging of address decoding and transaction handling.  
+- **Clock domain crossing and MAC interfacing** introduced timing and alignment challenges with real packet streams.   
 - Early designs suffered from **long combinational paths**, requiring architectural changes and deeper pipelining.  
-- FPGA validation exposed additional issues not seen in simulation, particularly related to real-time behavior.
+- FPGA validation exposed additional issues not seen in simulation, particularly related to real-time behavior for multiple packets, in response to which the FIFO was modified to start draining the packets as soon as action arrives, and not wait for the entire packet to arrive.
 
 ---
 
 ## Future Work
 
-- Improve **pipelining across critical modules** (especially TCAM and priority encoding) for higher frequency operation.  
-- Enable **early packet forwarding**, where packets are transmitted as soon as actions are available.  
+- Improve **pipelining across critical modules** (especially TCAM and priority encoding) for higher frequency operation.
+- Explore more varieties of actions to be taken on packets.
 - Expand **verification coverage** to include edge cases and sustained high-throughput scenarios.  
-- Strengthen **control-plane integration** for robust and scalable rule programming.  
-- Complete **full system validation with real Ethernet traffic** on FPGA.  
+- Integration of the **control plane**, that is the Caravel RISC-V Processor with the hardware accelerator, for programmability of TCAM and Action memories.
 - Refine the **ASIC flow (OpenLane)** with proper constraints, timing closure, and design-space exploration.
 
 ---
 
 ## Verification Plan
 
-An initial version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow and control mechanisms.
+The present version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow end to end through the dataplane.
 
 ### RTL Verification
 
