@@ -16,7 +16,7 @@ The design is integrated with the Caravel management SoC, allowing programmable 
 
 Modern edge devices and industrial gateways are increasingly required to perform real-time network functions such as packet filtering, traffic prioritization (QoS), and secure flow enforcement. These operations rely on rule-based processing, where each incoming packet must be parsed, classified, and matched against large rule tables.
 
-In conventional software-based implementations, these tasks are executed on general-purpose CPUs. However, packet processing workloads exhibit poor cache locality and irregular memory access patterns, especially when dealing with large rule sets for firewalling, QoS policies, and flow management. As a result, frequent cache misses and memory accesses introduce significant latency and reduce throughput.
+In conventional software-based implementations (homogeneous networking approaches), these tasks are executed on general-purpose CPUs. However, packet processing workloads exhibit poor cache locality and irregular memory access patterns, especially when dealing with large rule sets for firewalling, QoS policies, and flow management. As a result, frequent cache misses and memory accesses introduce significant latency and reduce throughput.
 
 Additionally, packet processing involves branch-heavy logic and per-packet decision making, which further limits CPU efficiency and scalability under high traffic conditions. In edge and industrial environments, where devices operate under strict power, cost, and real-time constraints, these inefficiencies become critical bottlenecks.
 
@@ -58,7 +58,7 @@ At a high level, packets enter the system from an external Ethernet PHY via a MA
    Incoming packet data is received through the MAC interface and buffered using an ingress FIFO to decouple I/O timing from internal processing.
 
 - **Header Extraction & Parsing**  
-   The packet stream is fed into a parser FSM that extracts relevant header fields (e.g., protocol, addresses, ports) and formats them into structured metadata.
+   The packet stream is fed into a header buffer, where the header bytes are buffered before being forwarded to the parser FSM that extracts relevant header fields (e.g., protocol, addresses, ports) and formats them into structured metadata.
 
 - **Key Generation**  
    A key builder module constructs a lookup key from the extracted metadata, which is used for rule matching.
@@ -158,7 +158,7 @@ Overall, a functional first iteration of the complete system has been realized, 
 
 ---
 
-## Verification an Backend Plan
+## Verification and Backend Plan
 
 The present version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow end to end through the dataplane.
 
