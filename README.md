@@ -63,8 +63,8 @@ At a high level, packets enter the system from an external Ethernet PHY via a MA
 - **Key Generation**  
    A key builder module constructs a lookup key from the extracted metadata, which is used for rule matching.
 
-- **Rule Matching Engine**  
-   The generated key is matched against a programmable rule table (TCAM-based rule matching is done) , enabling fast, parallel classification of packets based on pre-defined policies.
+- **TCAM-based Rule Matching Engine**  
+   The generated key is matched against a programmable rule table (TCAM memory-based rule matching is done) , enabling fast, parallel classification of packets based on pre-defined policies.
 
 - **Action Engine**  
    Based on the matched rule, an action is selected from an action memory. Eamples of supported actions include forwarding, dropping, tagging, or modifying packet metadata.
@@ -104,10 +104,6 @@ The Caravel management SoC, which includes a RISC-V processor, serves as the con
 - Managing system-level control and debugging  
 
 All configuration and control operations are performed via memory-mapped registers exposed through a Wishbone slave interface implemented in the NetStream design.
-
-### Data Plane Independence
-
-The NetStream datapath operates independently of the Caravel CPU, ensuring that packet processing continues at line rate without CPU intervention. The CPU is only involved in control and configuration, not in per-packet processing.
 
 ### I/O Integration
 
