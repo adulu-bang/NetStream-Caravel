@@ -1,54 +1,48 @@
 # NetStream: Caravel-Based Edge Network Packet-Processing Accelerator
 
-##  Overview
+## Overview
 
 NetStream is a custom network packet-processing accelerator designed for edge IoT and industrial gateway applications, implemented within the Caravel SoC framework.
 
-Edge devices today need to handle increasing volumes of network traffic while operating under tight latency, power, and cost constraints. Software-based packet processing on embedded processors often becomes a bottleneck, limiting real-time responsiveness and scalability in applications such as industrial monitoring, secure edge gateways, and smart infrastructure.
+Modern edge devices are required to handle increasing volumes of network traffic while operating under strict latency, power, and cost constraints. Software-based packet processing on embedded processors often becomes a bottleneck, limiting real-time responsiveness and scalability in applications such as industrial monitoring, secure edge gateways, and smart infrastructure.
 
-NetStream has been designed to addresses this challenge by introducing a dedicated hardware offload engine that accelerates packet inspection, classification, and action handling. By moving these tasks from software into hardware, the system achieves lower latency, higher throughput, and reduced CPU load under low-power constraints for edge devices.
+NetStream addresses this challenge by introducing a dedicated hardware offload engine for packet inspection, parsing, classification and action execution. By shifting these tasks from software to hardware, the system achieves lower latency, higher throughput, and reduced CPU load while maintaining efficiency under constrained power budgets.
 
-The design is integrated with the Caravel management SoC, allowing programmable control and system-level integration. NetStream is intended to function as part of a complete edge networking system, interfacing with external Ethernet MAC and PHY components as part of a system-level PCB implementation.
+The design is integrated with the Caravel management SoC, enabling programmable control and smooth system-level integration. NetStream is intended to operate as part of a complete edge networking system, interfacing with external Ethernet MAC and PHY components in a system-level deployment.
 
 ---
 
 ## Problem Statement
 
-Modern edge devices and industrial gateways are increasingly required to perform real-time network functions such as packet filtering, traffic prioritization (QoS), and secure flow enforcement. These operations rely on rule-based processing, where each incoming packet must be parsed, classified, and matched against large rule tables.
+Edge devices and industrial gateways are increasingly required to perform real-time network functions such as packet filtering, traffic prioritization (QoS (Quality of Service)), and secure flow enforcement. These operations rely on rule-based processing, where each packet must be parsed, classified, and matched against large rule tables.
 
-In conventional software-based implementations (homogeneous networking approaches), these tasks are executed on general-purpose CPUs. However, packet processing workloads exhibit poor cache locality and irregular memory access patterns, especially when dealing with large rule sets for firewalling, QoS policies, and flow management. As a result, frequent cache misses and memory accesses introduce significant latency and reduce throughput.
+In conventional software-based implementations, these tasks are executed on general-purpose CPUs. However, packet processing workloads exhibit poor cache locality, irregular memory access patterns, and branch-heavy logic. As a result, frequent cache misses and memory accesses introduce latency, reduce throughput, and limit scalability under high traffic conditions.
 
-Additionally, packet processing involves branch-heavy logic and per-packet decision making, which further limits CPU efficiency and scalability under high traffic conditions. In edge and industrial environments, where devices operate under strict power, cost, and real-time constraints, these inefficiencies become critical bottlenecks.
+These limitations are particularly critical in edge and industrial environments, where systems operate under strict latency, power, and cost constraints. As rule complexity and traffic volume grow, software-based approaches struggle to sustain performance, leading to:
 
-This leads to several challenges:
-- Inability to sustain high-throughput packet inspection and classification
-- Increased latency in time-sensitive applications such as industrial control systems
-- Higher power consumption due to CPU-intensive processing
-- Limited scalability as rule complexity and traffic volume grow
+- Reduced throughput for packet inspection and classification  
+- Increased latency in time-sensitive applications  
+- Higher power consumption due to CPU-intensive processing  
+- Limited scalability with growing rule sets  
 
-As edge systems demand faster, more deterministic, and energy-efficient networking capabilities, relying solely on software-based packet processing is no longer sufficient.
+Existing hardware-accelerated solutions, such as SmartNICs and programmable switches, address some of these challenges but are primarily designed for data center environments. They often involve higher cost, increased power consumption, complex integration, and reliance on specialized toolchains, making them unsuitable for resource-constrained edge systems.
 
-While hardware-accelerated solutions such as SmartNICs and programmable switches (e.g., P4-based architectures) address some of these limitations, they are not always suitable for edge and industrial deployments. These solutions typically target data center environments and come with higher cost, power consumption, and system complexity. Additionally, they often require external high-speed interfaces, specialized toolchains, and host integration, making them less practical for tightly constrained embedded systems.
-
-In contrast, edge devices demand compact, cost-effective, and tightly integrated solutions that can deliver deterministic performance without the overhead of full-scale data center networking infrastructure. This creates a gap between existing high-performance networking solutions and the requirements of edge-scale systems.
-
+This creates a gap between high-performance networking solutions and the requirements of edge-scale deployments, which demand compact, cost-effective, and tightly integrated architectures capable of delivering deterministic, real-time packet processing.
 
 
 ---
 
 ## Proposed Solution
 
-NetStream addresses the limitations of software-based packet processing by introducing a hardware-accelerated, streaming packet-processing pipeline integrated within the Caravel user project area.
+NetStream addresses the limitations of software-based packet processing by introducing a hardware-accelerated, streaming datapath integrated within the Caravel user project area.
 
-The core design philosophy is based on a clear separation between the control plane and the data plane. The Caravel RISC-V management core acts as the control plane, responsible for configuring rules and actions, updating policies, and monitoring system behavior. In contrast, the NetStream datapath operates as a dedicated data plane, performing packet parsing, classification, and action execution entirely in hardware.
+The design follows a clear separation between control plane and data plane. The Caravel RISC-V management core acts as the control plane, responsible for configuring rules, updating policies, and monitoring system behavior. In contrast, the NetStream datapath operates as a dedicated data plane, performing packet parsing, classification, and action execution entirely in hardware.
 
-By structuring the design as a streaming pipeline, NetStream processes packets in a deterministic, stage-by-stage manner without relying on large memory accesses or complex software routines. Each packet flows through a sequence of hardware stages that extract relevant fields, generate lookup keys, match against rule sets parallely, and apply corresponding actions such as dropping, rewriting or forwarding.
+Packets are processed through a deterministic, stage-wise pipeline where relevant fields are extracted, lookup keys are generated, and rule-based decisions are made in real time. This enables line-rate operation without relying on large memory accesses or complex software routines.
 
-This approach eliminates the cache inefficiencies and memory bottlenecks associated with CPU-based processing, enabling line-rate performance with deterministic latency and significantly reduced CPU overhead.
+NetStream specifically offloads the computationally intensive classification stage from the gateway CPU. For example, in QoS scenarios, NetStream modifies packet metadata (e.g., DSCP fields) based on configured policies. The gateway CPU and networking stack then use these standard fields for scheduling and forwarding, without performing expensive rule lookups. This effectively separates packet processing into two stages: classification (expensive) in hardware (NetStream) and scheduling (cheap) in software (CPU).
 
-The system is fully programmable by the RISCV processor through the Wishbone interface, allowing dynamic updates to filtering rules, classification policies, and monitoring parameters without modifying the hardware datapath.
-
-Overall, NetStream transforms packet processing from a software-driven, memory-bound workload into a hardware-accelerated, deterministic process suitable for edge and industrial networking environments.
+By shifting classification from a software-driven, memory-bound workflow to a hardware-accelerated pipeline, NetStream reduces CPU load, improves throughput, and ensures deterministic latency, while remaining fully programmable through the Wishbone interface.
 
 ---
 
