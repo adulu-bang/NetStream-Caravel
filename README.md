@@ -26,9 +26,13 @@ This leads to several challenges:
 - Higher power consumption due to CPU-intensive processing
 - Limited scalability as rule complexity and traffic volume grow
 
+As edge systems demand faster, more deterministic, and energy-efficient networking capabilities, relying solely on software-based packet processing is no longer sufficient.
+
 While hardware-accelerated solutions such as SmartNICs and programmable switches (e.g., P4-based architectures) address some of these limitations, they are not always suitable for edge and industrial deployments. These solutions typically target data center environments and come with higher cost, power consumption, and system complexity. Additionally, they often require external high-speed interfaces, specialized toolchains, and host integration, making them less practical for tightly constrained embedded systems.
 
-As edge systems demand faster, more deterministic, and energy-efficient networking capabilities, relying solely on software-based packet processing is no longer sufficient.
+In contrast, edge devices demand compact, cost-effective, and tightly integrated solutions that can deliver deterministic performance without the overhead of full-scale data center networking infrastructure. This creates a gap between existing high-performance networking solutions and the requirements of edge-scale systems.
+
+
 
 ---
 
