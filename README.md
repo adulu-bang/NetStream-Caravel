@@ -44,6 +44,7 @@ NetStream specifically offloads the computationally intensive classification sta
 
 By shifting classification from a software-driven, memory-bound workflow to a hardware-accelerated pipeline, NetStream reduces CPU load, improves throughput, and ensures deterministic latency, while remaining fully programmable through the Wishbone interface.
 
+
 ![System-Level Diagram](docs/images/System_integration_netstream.png)
 
 ---
