@@ -128,10 +128,9 @@ Within the overall system, Caravel provides programmability and system control, 
 
 The design has been developed iteratively from a basic single-packet pipeline to a multi-packet, pipelined packet processing system.
 
-- The **dataplane RTL** has been designed, integrated, and verified across multiple stages including parsing, key generation, TCAM matching, and action execution. It now supports **continuous packet flows with multiple packets in-flight** through pipelining.  
-- A **packet buffering system (FIFO + rewrite path)** has been integrated to enable correct synchronization between packet data and computed actions, allowing end-to-end packet handling.   
-- Initial **system-level verification** has been performed using testbenches covering multiple packet scenarios and action correctness.  
-- The design has also been **validated on Kria KR260 FPGA**, with successful synthesis, implementation, and bitstream generation.
+- The dataplane RTL has been designed, integrated, and verified across multiple stages including parsing, key generation, TCAM matching, and action execution. It supports continuous packet flows with multiple packets in-flight through pipelining. - A packet buffering system (FIFO + rewrite path) has been integrated to enable correct synchronization between packet data and computed actions, allowing end-to-end packet handling.   
+- Initial verification has been performed using testbenches covering multiple packet scenarios and action correctness.  
+- The design has also been validated though a prototype on Kria KR260 FPGA, with successful synthesis, implementation, and bitstream generation.
 
 Overall, a functional first iteration of the complete system has been realized, with both dataplane and control plane working together at a basic level.
 
@@ -139,21 +138,21 @@ Overall, a functional first iteration of the complete system has been realized, 
 
 ## Problems Faced
 
-- **Synchronization across parallel datapaths** was a major challenge, especially ensuring correct mapping of actions to packets in continuous flows.  
-- Handling **valid-ready handshakes and packet boundaries** across modules led to multiple bugs and required redesigns.  
-- **Clock domain crossing and MAC interfacing** introduced timing and alignment challenges with real packet streams.   
-- Early designs suffered from **long combinational paths**, requiring architectural changes and deeper pipelining.  
+- Synchronization across parallel datapaths was a major challenge, especially ensuring correct mapping of actions to packets in continuous flows.  
+- Handling valid-ready handshakes and packet boundaries across modules led to multiple bugs and required redesigns.  
+- Clock domain crossing and MAC interfacing introduced timing and alignment challenges with real packet streams.   
+- Early designs suffered from long combinational paths, requiring architectural changes and deeper pipelining.  
 - FPGA validation exposed additional issues not seen in simulation, particularly related to real-time behavior for multiple packets, in response to which the FIFO was modified to start draining the packets as soon as action arrives, and not wait for the entire packet to arrive.
 
 ---
 
 ## Future Work
 
-- Improve **pipelining across critical modules** (especially TCAM and priority encoding) for higher frequency operation.
+- Improve pipelining across critical modules (especially TCAM and priority encoding) for higher frequency operation.
 - Explore more varieties of actions to be taken on packets.
-- Expand **verification coverage** to include edge cases and sustained high-throughput scenarios.  
-- Integration of the **control plane**, that is the Caravel RISC-V Processor with the hardware accelerator, for programmability of TCAM and Action memories.
-- Refine the **ASIC flow (OpenLane)** with proper constraints, timing closure, and design-space exploration.
+- Expand verification coverage to include edge cases and sustained high-throughput scenarios.  
+- Integration of the control plane, that is the Caravel RISC-V Processor with the hardware accelerator, for programmability of TCAM and Action memories.
+- Refine the ASIC flow (OpenLane) with proper constraints, timing closure, and design-space exploration.
 
 ---
 
@@ -163,7 +162,7 @@ The present version of the NetStream datapath has been implemented in Verilog an
 
 ### RTL Verification
 
-- Functional verification performed using Verilog testbenches and cocotb-based simulations  
+- Functional verification performed using Verilog testbenches 
 - Initial end-to-end validation of the packet-processing pipeline, including:
   - Header parsing and metadata extraction  
   - Key generation and rule matching for a limited set of rules  
@@ -198,21 +197,13 @@ Simulation waveforms have been used to verify:
 - Gate-Level Simulation (GLS) will be performed after synthesis  
 - Static Timing Analysis (STA) will be conducted using OpenSTA as part of the OpenLane flow  
 
-This staged verification approach ensures a smooth transition from functional validation to silicon-ready design.
-
 ### Physical Design Flow
 
 - Target process: SKY130 (130nm)  
 - RTL-to-GDSII implementation using OpenLane  
-- Includes synthesis, floorplanning, placement, routing, and timing verification  
+- Includes synthesis, floorplanning, placement, routing, and timing verification
 
-### System Integration
-
-- Integration into Caravel `user_project_wrapper`  
-- Wishbone-based control interface for rule configuration and monitoring  
-- External interfacing with Ethernet MAC/PHY as part of PCB-level system  
-
-This phased implementation approach ensures that the design evolves from a working prototype into a robust and optimized silicon solution.
+---
 
 ## Deliverables
 
