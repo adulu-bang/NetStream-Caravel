@@ -163,7 +163,7 @@ Overall, a functional first iteration of the complete system has been realized, 
 
 ---
 
-## Verification and Backend Plan
+## Verification and Backend Plan and Progress
 
 The present version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow end to end through the dataplane. As for the backend, a few iterations of the Openlane flow have been tried on the intial Dataplane RTL, with a few issues still to be resolved.
 
