@@ -222,7 +222,7 @@ The final submission will provide a complete, reproducible reference design span
 
 - **Firmware**  
 
-The project aims to deliver not just a functional chip, but a complete and reproducible edge networking reference design.
+The project aims to deliver not just a functional chip, but an edge networking system thaat is reproduceable and can be scaled.
 
 ---
 
