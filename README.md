@@ -218,10 +218,9 @@ The final submission will provide a complete, reproducible reference design span
 - **Verification Suite:**  
   Testbenches for RTL and Gate-Level Simulation (GLS), along with representative waveform results demonstrating pipeline operation  
 
-- **PCBA Design:**
+- **PCBA Design**
 
-- **Firmware:**  
-  Software for rule configuration, control, and monitoring via the Caravel management SoC  
+- **Firmware**  
 
 The project aims to deliver not just a functional chip, but a complete and reproducible edge networking reference design.
 
