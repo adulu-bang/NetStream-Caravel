@@ -89,6 +89,9 @@ At a high level, packets enter the system from an external Ethernet PHY via a MA
 - **Decoupled Data and Control Planes:**  
   The datapath operates independently of the control logic, enabling efficient hardware acceleration. The control plane doesn't touch the packets in real-time, all the packet-processing is offloaded to the hardware.
 
+- **Use of SRAM Macros for the TCAM and Action memories***
+  Memory components such as the TCAM and action storage are currently modeled in RTL and are intended to be implemented using SRAM-based macros in the final design, which will further optimize area and timing.
+
 - **Programmable Behavior:**  
   Rule tables and actions can be dynamically configured without modifying the hardware pipeline.
 ---
@@ -116,6 +119,10 @@ All configuration and control operations are performed via memory-mapped registe
 ### System-Level Role
 
 Within the overall system, Caravel provides programmability and system control, while NetStream functions as a dedicated hardware accelerator for packet processing. This separation enables efficient and scalable edge networking solutions.
+
+### Area Constraints
+
+The present NetStream datapath has been synthesized and taken through initial ASIC flow attempts, and it has been found that the core packet-processing pipeline is compact and suitable for integration within the Caravel user project area (~10 mm²).
 
 ---
 
