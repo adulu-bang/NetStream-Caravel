@@ -165,7 +165,7 @@ Overall, a functional first iteration of the complete system has been realized, 
 
 ## Verification and Backend Plan
 
-The present version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow end to end through the dataplane.
+The present version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow end to end through the dataplane. As for the backend, a few iterations of the Openlane flow have been tried on the intial Dataplane RTL, with a few issues still to be resolved.
 
 ### RTL Verification
 
@@ -207,7 +207,7 @@ Simulation waveforms have been used to verify:
 ### Physical Design Flow
 
 - Target process: SKY130 (130nm)  
-- RTL-to-GDSII implementation using OpenLane  
+- RTL-to-GDSII implementation using OpenLane (Already started on the initial RTL iterations)  
 - Includes synthesis, floorplanning, placement, routing, and timing verification
 
 ---
