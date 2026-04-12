@@ -272,7 +272,7 @@ The NetStream datapath has been taken through a complete RTL-to-GDSII flow using
   - Target density: 25%  
   - Achieved utilization: ~32%
  
-![Block Diagram](docs/images/final_BD_netstream.png)
+![Block Diagram](docs/images/dtaplane_top_gds_klayout.png)
 
 ### Observations
 
