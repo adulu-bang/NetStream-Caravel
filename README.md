@@ -120,11 +120,6 @@ All configuration and control operations are performed via memory-mapped registe
 
 Within the overall system, Caravel provides programmability and system control, while NetStream functions as a dedicated hardware accelerator for packet processing. This separation enables efficient and scalable edge networking solutions.
 
-### Area Constraints
-
-The present NetStream datapath has been synthesized and taken through initial ASIC flow attempts, and it has been found that the core packet-processing pipeline is compact and suitable for integration within the Caravel user project area (~10 mm²).
-
----
 
 ## Block Diagram Of Architecture
 ![Block Diagram](docs/images/final_BD_netstream.png)
@@ -133,35 +128,131 @@ The present NetStream datapath has been synthesized and taken through initial AS
 
 ## Current Progress
 
-The design has been developed iteratively from a basic single-packet pipeline to a multi-packet, pipelined packet processing system.
+The NetStream design has evolved from a functional RTL prototype into a physically implemented ASIC datapath through multiple OpenLane iterations.
 
-- The dataplane RTL has been designed, integrated, and verified across multiple stages including parsing, key generation, TCAM matching, and action execution. It supports continuous packet flows with multiple packets in-flight through pipelining. - A packet buffering system (FIFO + rewrite path) has been integrated to enable correct synchronization between packet data and computed actions, allowing end-to-end packet handling.   
-- Initial verification has been performed using testbenches covering multiple packet scenarios and action correctness.  
-- The design has also been validated though a prototype on Kria KR260 FPGA, with successful synthesis, implementation, and bitstream generation.
+### Dataplane Development
 
-Overall, a functional first iteration of the complete system has been realized, with both dataplane and control plane working together at a basic level.
+- Complete dataplane RTL implemented, including:
+  - Packet parsing and metadata extraction  
+  - Key generation and TCAM-based classification  
+  - Action selection and packet rewrite path  
+
+- Fully pipelined architecture supporting multiple packets in-flight  
+- FIFO-based buffering added to ensure correct alignment between packet data and computed actions  
+
+### FPGA Validation
+
+- Design validated on Kria KR260 FPGA  
+- Successful synthesis, implementation, and bitstream generation  
+- Real-time packet behavior verified, leading to architectural improvements (early FIFO drain once action is ready)
+
+### ASIC Implementation Progress
+
+- Dataplane successfully taken through full RTL-to-GDSII flow (OpenLane, SKY130)  
+- SRAM macros integrated for TCAM and action memory  
+
+- The TCAM was redesigned from a purely combinational structure to a **pipelined SRAM-based lookup**, which significantly reduced critical path delay and enabled timing closure in nominal conditions  
+
+- Post-route outputs generated: GDSII, DEF, LEF, SPEF, SDF, and LIB  
+
+- Caravel integration:
+  - `user_project_wrapper` integration completed and hardened for dataplane-only version  
+  - Confirms compatibility with Caravel infrastructure  
+
+### Timing Status (STA)
+
+- **Nominal corner (TT, 1.8V, 25°C):**
+  - No setup or hold violations  
+  - Setup slack ≈ +1.78 ns  
+  - Hold slack ≈ +0.11 ns  
+
+- Timing closure at TT was achieved after introducing pipelining in the TCAM lookup stage using SRAM macros, replacing the earlier combinational implementation which had significant critical path violations  
+
+- **Multi-corner timing (SS/FF):**
+  - Full closure across extreme PVT corners is pending  
+  - Current results indicate additional optimization is required for robustness under worst-case conditions  
 
 ---
 
 ## Problems Faced
 
-- Synchronization across parallel datapaths was a major challenge, especially ensuring correct mapping of actions to packets in continuous flows.  
-- Handling valid-ready handshakes and packet boundaries across modules led to multiple bugs and required redesigns.  
-- Clock domain crossing and MAC interfacing introduced timing and alignment challenges with real packet streams.   
-- Early designs suffered from long combinational paths, requiring architectural changes and deeper pipelining.  
-- FPGA validation exposed additional issues not seen in simulation, particularly related to real-time behavior for multiple packets, in response to which the FIFO was modified to start draining the packets as soon as action arrives, and not wait for the entire packet to arrive.
+### Timing and Signal Integrity
+
+- Initial design (combinational TCAM) resulted in large critical paths and timing violations  
+- Resolved by introducing pipelined SRAM-based lookup, but further optimization is needed for multi-corner closure  
+
+- Max slew and capacitance violations observed, indicating need for:
+  - Improved buffering  
+  - Better cell sizing and fanout control  
+
+### Antenna Violations
+
+- Net violations: 73  
+- Pin violations: 80  
+
+- Caused by long routing segments and high fanout nets  
+- Requires diode insertion and routing refinement  
+
+### DRC and Toolchain Issues
+
+- **KLayout DRC:** 0 violations (clean)  
+- **Magic DRC:** High violation count (~4700)  
+
+- Main cause:
+  - OpenRAM macro integration  
+  - Layer mapping / unsupported layer issues in Magic  
+
+### Integration Challenges
+
+- OpenRAM macro integration introduced:
+  - GDS layer mismatches  
+  - Tool compatibility issues with Magic  
+
+- Required manual fixes and adjustments to layer handling  
+
+### Architectural Challenges
+
+- Synchronization across parallel datapaths required redesign of buffering strategy  
+- Valid-ready handshake handling across modules led to multiple bugs  
+- FPGA testing exposed real-time issues not visible in simulation  
 
 ---
 
 ## Future Work
 
-- Improve pipelining across critical modules (especially TCAM and priority encoding) for higher frequency operation.
-- Explore more varieties of actions to be taken on packets.
-- Expand verification coverage to include edge cases and sustained high-throughput scenarios.  
-- Integration of the control plane, that is the Caravel RISC-V Processor with the hardware accelerator, for programmability of TCAM and Action memories.
-- Refine the ASIC flow (OpenLane) with proper constraints, timing closure, and design-space exploration.
+### Multi-Corner Timing Closure
 
----
+- Extend timing closure beyond TT corner by:
+  - Further pipelining critical paths  
+  - Optimizing TCAM and key generation stages  
+  - Buffer insertion and logic restructuring  
+
+### Signal Integrity Fixes
+
+- Address max slew and capacitance violations  
+- Optimize fanout and routing  
+
+### Antenna Fixing
+
+- Insert antenna diodes  
+- Improve routing to reduce long wire segments  
+
+### DRC Cleanup
+
+- Resolve Magic DRC issues by:
+  - Fixing OpenRAM layer mapping  
+  - Aligning technology files and layer definitions  
+
+### Full Caravel Integration
+
+- Integrate macro-based dataplane into `user_project_wrapper`  
+- Validate complete system including control plane and memory  
+
+### Verification Expansion
+
+- Add stress and long-duration packet testing  
+- Increase rule table complexity  
+- Perform Gate-Level Simulation (GLS) with SDF back-annotation  
 
 ## Verification and Backend Plan and Progress
 
@@ -209,6 +300,44 @@ Simulation waveforms have been used to verify:
 - Target process: SKY130 (130nm)  
 - RTL-to-GDSII implementation using OpenLane (Already started on the initial RTL iterations)  
 - Includes synthesis, floorplanning, placement, routing, and timing verification
+
+---
+
+### Area Constraints and Physical Utilization
+
+The NetStream datapath has been taken through a complete RTL-to-GDSII flow using OpenLane (SKY130), enabling accurate evaluation of area and utilization.
+
+### Post-Layout Area Metrics
+
+- **Die area:** ~8.07 mm²  
+- **Core area:** ~7.98 mm²  
+- **Standard cell area:** ~2.00 mm²  
+- **Macro area (SRAM blocks):** ~0.57 mm²  
+- **Total instance area:** ~2.57 mm²  
+
+- **Utilization:**
+  - Target density: 25%  
+  - Achieved utilization: ~32%  
+
+### Observations
+
+- The design comfortably fits within the Caravel user project area constraints.  
+
+- The relatively low utilization indicates:
+  - Headroom for further logic expansion or deeper pipelining  
+  - Opportunity to improve timing closure by redistributing logic  
+
+- Presence of SRAM macros (TCAM and action memory) contributes significantly to area realism compared to pure RTL estimates.  
+
+### Physical Design Status
+
+- Placement and routing completed successfully  
+- Final routed design area is within acceptable limits for Caravel integration  
+
+- Area efficiency can be further improved through:
+  - Density tuning  
+  - Floorplan optimization  
+  - Macro placement refinement  
 
 ---
 
