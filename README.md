@@ -252,7 +252,48 @@ The NetStream design has evolved from a functional RTL prototype into a physical
 
 - Add stress and long-duration packet testing  
 - Increase rule table complexity  
-- Perform Gate-Level Simulation (GLS) with SDF back-annotation  
+- Perform Gate-Level Simulation (GLS) with SDF back-annotation
+
+---
+
+### Area Constraints and Physical Utilization
+
+The NetStream datapath has been taken through a complete RTL-to-GDSII flow using OpenLane (SKY130), enabling accurate evaluation of area and utilization.
+
+### Post-Layout Area Metrics
+
+- **Die area:** ~8.07 mm²  
+- **Core area:** ~7.98 mm²  
+- **Standard cell area:** ~2.00 mm²  
+- **Macro area (SRAM blocks):** ~0.57 mm²  
+- **Total instance area:** ~2.57 mm²  
+
+- **Utilization:**
+  - Target density: 25%  
+  - Achieved utilization: ~32%  
+
+### Observations
+
+- The design comfortably fits within the Caravel user project area constraints.  
+
+- The relatively low utilization indicates:
+  - Headroom for further logic expansion or deeper pipelining  
+  - Opportunity to improve timing closure by redistributing logic  
+
+- Presence of SRAM macros (TCAM and action memory) contributes significantly to area realism compared to pure RTL estimates.  
+
+### Physical Design Status
+
+- Placement and routing completed successfully  
+- Final routed design area is within acceptable limits for Caravel integration  
+
+- Area efficiency can be further improved through:
+  - Density tuning  
+  - Floorplan optimization  
+  - Macro placement refinement  
+
+---
+
 
 ## Verification and Backend Plan and Progress
 
@@ -303,43 +344,6 @@ Simulation waveforms have been used to verify:
 
 ---
 
-### Area Constraints and Physical Utilization
-
-The NetStream datapath has been taken through a complete RTL-to-GDSII flow using OpenLane (SKY130), enabling accurate evaluation of area and utilization.
-
-### Post-Layout Area Metrics
-
-- **Die area:** ~8.07 mm²  
-- **Core area:** ~7.98 mm²  
-- **Standard cell area:** ~2.00 mm²  
-- **Macro area (SRAM blocks):** ~0.57 mm²  
-- **Total instance area:** ~2.57 mm²  
-
-- **Utilization:**
-  - Target density: 25%  
-  - Achieved utilization: ~32%  
-
-### Observations
-
-- The design comfortably fits within the Caravel user project area constraints.  
-
-- The relatively low utilization indicates:
-  - Headroom for further logic expansion or deeper pipelining  
-  - Opportunity to improve timing closure by redistributing logic  
-
-- Presence of SRAM macros (TCAM and action memory) contributes significantly to area realism compared to pure RTL estimates.  
-
-### Physical Design Status
-
-- Placement and routing completed successfully  
-- Final routed design area is within acceptable limits for Caravel integration  
-
-- Area efficiency can be further improved through:
-  - Density tuning  
-  - Floorplan optimization  
-  - Macro placement refinement  
-
----
 
 ## Deliverables
 
