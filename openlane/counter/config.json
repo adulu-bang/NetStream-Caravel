@@ -1,0 +1,11 @@
+{
+  "DESIGN_NAME": "counter",
+  "VERILOG_FILES": [
+    "dir::../../verilog/rtl/counter.v"
+  ],
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 25,
+  "FP_SIZING": "relative",
+  "DIE_AREA": [0, 0, 200, 200]
+}
+ 

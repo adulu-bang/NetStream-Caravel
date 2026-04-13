@@ -1,0 +1,110 @@
+{
+  "project": {
+    "name": "NetStream-Caravel",
+    "type": "digital",
+    "user": "--",
+    "version": "1",
+    "user_project_wrapper_hash": "",
+    "submission_state": "Draft",
+    "gpio_config": {
+      "5": "13'h1808",
+      "6": "13'h1808",
+      "7": "13'h1808",
+      "8": "13'h1808",
+      "9": "13'h1808",
+      "10": "13'h1808",
+      "11": "13'h1808",
+      "12": "13'h1808",
+      "13": "13'h1808",
+      "14": "13'h1808",
+      "15": "13'h1808",
+      "16": "13'h1808",
+      "17": "13'h1808",
+      "18": "13'h1808",
+      "19": "13'h1808",
+      "20": "13'h1808",
+      "21": "13'h1808",
+      "22": "13'h1808",
+      "23": "13'h1808",
+      "24": "13'h1808",
+      "25": "13'h1808",
+      "26": "13'h1808",
+      "27": "13'h1808",
+      "28": "13'h1808",
+      "29": "13'h1808",
+      "30": "13'h1808",
+      "31": "13'h1808",
+      "32": "13'h1808",
+      "33": "13'h1808",
+      "34": "13'h1808",
+      "35": "13'h1808",
+      "36": "13'h1808",
+      "37": "13'h1808"
+    }
+  },
+  "precheck": {
+    "version": "1.0.2",
+    "timestamp": "2026-03-20T10:18:04.426803+00:00",
+    "pdk": "sky130A",
+    "passed": true,
+    "checks": {
+      "topcell_check": {
+        "status": "pass",
+        "duration_s": 1.22
+      },
+      "gpio_defines": {
+        "status": "pass",
+        "duration_s": 1.13
+      },
+      "xor": {
+        "status": "pass",
+        "duration_s": 14.84
+      },
+      "klayout_feol": {
+        "status": "pass",
+        "duration_s": 296.11
+      },
+      "klayout_beol": {
+        "status": "pass",
+        "duration_s": 1069.31
+      },
+      "klayout_offgrid": {
+        "status": "pass",
+        "duration_s": 145.47
+      },
+      "klayout_met_min_ca_density": {
+        "status": "pass",
+        "duration_s": 42.38
+      },
+      "klayout_pin_label_purposes_overlapping_drawing": {
+        "status": "pass",
+        "duration_s": 27.83
+      },
+      "klayout_zeroarea": {
+        "status": "pass",
+        "duration_s": 8.21
+      },
+      "spike_check": {
+        "status": "pass",
+        "duration_s": 5.69
+      },
+      "illegal_cellname_check": {
+        "status": "pass",
+        "duration_s": 1.75
+      },
+      "oeb": {
+        "status": "pass",
+        "duration_s": 614.1
+      },
+      "lvs": {
+        "status": "pass",
+        "duration_s": 1493.29
+      },
+      "magic_drc": {
+        "status": "skip",
+        "duration_s": 0,
+        "reason": "optional (use --magic-drc to include)"
+      }
+    }
+  }
+}

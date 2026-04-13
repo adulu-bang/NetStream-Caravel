@@ -1,0 +1,95 @@
+{
+    "//": "Design files",
+    "VERILOG_FILES": [
+        "dir::../../verilog/rtl/defines.v",
+        "dir::../../verilog/rtl/user_project_wrapper.v",
+        "dir::../../verilog/rtl/dataplane_top_stub.v"
+    ],
+
+
+
+    "PNR_SDC_FILE": "dir::signoff.sdc",
+    
+    "//": "Hardening strategy variables (this is for 1-Macro-First Hardening). Visit https://docs.google.com/document/d/1pf-wbpgjeNEM-1TcvX2OJTkHjqH_C9p-LURCASS0Zo8 for more info",
+    "SYNTH_ELABORATE_ONLY": false,
+    "RUN_POST_GPL_DESIGN_REPAIR": true,
+    "RUN_POST_CTS_RESIZER_TIMING": true,
+    "DESIGN_REPAIR_BUFFER_INPUT_PORTS": true,
+    "FP_PDN_ENABLE_RAILS": true,
+    "RUN_ANTENNA_REPAIR": true,
+    "RUN_FILL_INSERTION": true,
+    "RUN_TAP_ENDCAP_INSERTION": true,
+    "RUN_CTS": true,
+    "RUN_IRDROP_REPORT": true,
+    "ERROR_ON_SYNTH_CHECKS": false,
+
+    "//": "Macros configurations",
+   "MACROS": {
+    "dataplane_top": {
+        "gds": [
+            "dir::../../gds/dataplane_top.gds"
+        ],
+        "lef": [
+            "dir::../../lef/dataplane_top.lef"
+        ],
+        "instances": {
+            "u_dataplane": {
+                "location": [300, 300],
+                "orientation": "N"
+            }
+        }
+    }
+},
+    "PDN_MACRO_CONNECTIONS": ["u_dataplane vccd1 vssd1 vccd1 vssd1"],
+
+
+    "//": "PDN configurations",
+    "FP_PDN_VOFFSET": 5,
+    "FP_PDN_HOFFSET": 5,
+    "FP_PDN_VWIDTH": 3.1,
+    "FP_PDN_HWIDTH": 3.1,
+    "FP_PDN_VSPACING": 15.5,
+    "FP_PDN_HSPACING": 15.5,
+    "FP_PDN_VPITCH": 180,
+    "FP_PDN_HPITCH": 180,
+    "ERROR_ON_PDN_VIOLATIONS": false,
+
+    "//": "Magic variables",
+    "MAGIC_DRC_USE_GDS": true,
+
+    "DRT_THREADS": 1,
+    "MAX_TRANSITION_CONSTRAINT": 1.5,
+
+    "//": "Fixed configurations for caravel. You should NOT edit this section",
+    "DESIGN_NAME": "user_project_wrapper",
+    "FP_SIZING": "absolute",
+    "DIE_AREA": [0, 0, 2920, 3520],
+    "FP_DEF_TEMPLATE": "dir::fixed_dont_change/user_project_wrapper.def",
+    "VDD_NETS": [
+        "vccd1",
+        "vccd2",
+        "vdda1",
+        "vdda2"
+    ],
+    "GND_NETS": [
+        "vssd1",
+        "vssd2",
+        "vssa1",
+        "vssa2"
+    ],
+    "FP_PDN_CORE_RING": true,
+    "FP_PDN_CORE_RING_VWIDTH": 3.1,
+    "FP_PDN_CORE_RING_HWIDTH": 3.1,
+    "FP_PDN_CORE_RING_VOFFSET": 12.45,
+    "FP_PDN_CORE_RING_HOFFSET": 12.45,
+    "FP_PDN_CORE_RING_VSPACING": 1.7,
+    "FP_PDN_CORE_RING_HSPACING": 1.7,
+    "CLOCK_PORT": "wb_clk_i",
+    "SIGNOFF_SDC_FILE": "dir::signoff.sdc",
+    "MAGIC_DEF_LABELS": false,
+    "CLOCK_PERIOD": 25,
+    "MAGIC_ZEROIZE_ORIGIN": false,
+    "meta": {
+        "version": 2
+    }
+}

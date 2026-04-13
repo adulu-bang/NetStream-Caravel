@@ -1,0 +1,85 @@
+{
+  "DESIGN_NAME": "dataplane_top", 
+
+  
+
+
+
+  "EXTRA_VERILOG_MODELS": [
+   "dir::macros/sram_32x32/sky130_sram_1kbyte_1rw1r_32x256_8.v"
+],
+
+  "VERILOG_FILES": [
+    "dir::../../verilog/rtl/dataplane_top.v",
+    "dir::../../verilog/rtl/action_drain_ctrl_upper.v",
+    "dir::../../verilog/rtl/action_pipe.v",
+    "dir::../../verilog/rtl/header_buffer_pipe_fifo.v",
+    "dir::../../verilog/rtl/header_to_parser_pipe_reg.v",
+    "dir::../../verilog/rtl/key_builder_pipe.v",
+    "dir::../../verilog/rtl/mac_rx_fifo_final.v",
+    "dir::../../verilog/rtl/packet_fifo_upper.v",
+    "dir::../../verilog/rtl/parser_fsm_pipe_2.v",
+    "dir::../../verilog/rtl/parser_to_key_pipe.v",
+    "dir::../../verilog/rtl/rewrite_mux_upper.v",
+    "dir::../../verilog/rtl/tcam_ctrl_pipe.v",
+    "dir::../../verilog/rtl/tcam_to_action_pipe.v"
+  ],
+
+"MACROS": {
+
+  "sky130_sram_1kbyte_1rw1r_32x256_8": {
+    "gds": "dir::macros/sram_32x32/sky130_sram_1kbyte_1rw1r_32x256_8.gds",
+    "lef": "dir::macros/sram_32x32/sky130_sram_1kbyte_1rw1r_32x256_8.lef",
+    "lib": {
+      "tt": "dir::macros/sram_32x32/sky130_sram_1kbyte_1rw1r_32x256_8_TT_1p8V_25C.lib"
+    }
+  }
+ 
+},
+
+
+
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 10,
+
+ "FP_SIZING": "relative",
+  "FP_CORE_UTIL": 25, 
+
+  "PL_TARGET_DENSITY_PCT": 45,
+
+
+  "MAX_TRANSITION_CONSTRAINT": 1.5,
+  "MAX_FANOUT_CONSTRAINT": 16,
+  "MACRO_PLACEMENT_CFG": "dir::macro.cfg",
+
+
+
+
+  "RUN_CTS": true,
+
+  "RUN_ANTENNA_REPAIR": true,
+  "RUN_HEURISTIC_DIODE_INSERTION": true,
+
+
+  "VDD_NETS": ["vccd1"],
+  "GND_NETS": ["vssd1"],
+
+  "DPL_CELL_PADDING": 2,
+  "GPL_CELL_PADDING": 2,
+
+"MAGIC_DRC_USE_GDS": false,
+"MAGIC_CAPTURE_ERRORS": false,
+
+
+"RUN_TAP_ENDCAP_INSERTION": true,
+"FP_TAPCELL_DIST": 10,
+
+
+  "FALLBACK_SDC_FILE": "dir::constraints.sdc",
+  "PNR_SDC_FILE": "dir::constraints.sdc",
+"SIGNOFF_SDC_FILE": "dir::constraints.sdc",
+
+  "meta": {
+    "version": 2
+  }
+}

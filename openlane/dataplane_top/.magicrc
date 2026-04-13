@@ -1,0 +1,24 @@
+# Sourcing the original tech and setup first
+path search +
+
+# 1. Setup the PDK Path
+if {[catch {set PDK_ROOT $env(PDK_ROOT)}]} {
+    set PDK_ROOT /home/adulu/NetStream-Caravel/dependencies/pdks
+}
+
+# 2. Load the actual technology rules (Crucial)
+tech load $PDK_ROOT/sky130A/libs.tech/magic/sky130A.tech
+
+# 3. Load the official device generators (The long file you showed earlier)
+source $PDK_ROOT/sky130A/libs.tech/magic/sky130A.tcl
+
+# 4. APPLY THE FIXES FOR OPENRAM
+gds warning default
+gds mask 235 0
+gds readonly true
+
+# 5. Make sure Magic can find your macro GDS
+# 5. Make sure Magic can find your macro GDS
+addpath /home/adulu/NetStream-Caravel/openlane/dataplane_top/macros/sram_32x32
+
+puts stdout "!!! CUSTOM .MAGICRC LOADED SUCCESSFULLY WITH OPENRAM FIXES !!!"
