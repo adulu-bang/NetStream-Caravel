@@ -96,11 +96,11 @@ At a high level, packets enter the system from an external Ethernet PHY via a MA
   Rule tables and actions can be dynamically configured without modifying the hardware pipeline.
 ---
 
-## Integration with Caravel
+### Integration with Caravel
 
 NetStream is implemented within the Caravel user project area and interfaces with the Caravel management SoC through the Wishbone bus.
 
-### Control Plane Integration
+- **Control Plane Integration**
 
 The Caravel management SoC, which includes a RISC-V processor, serves as the control plane for NetStream. It is responsible for:
 
@@ -111,12 +111,12 @@ The Caravel management SoC, which includes a RISC-V processor, serves as the con
 
 All configuration and control operations are performed via memory-mapped registers exposed through a Wishbone slave interface implemented in the NetStream design.
 
-### I/O Integration
+- **I/O Integration**
 
 - Packet I/O is interfaced through GPIO or dedicated user I/O pins connected to an external Ethernet MAC/PHY.  
 - The design is integrated into the `user_project_wrapper`, adhering to Caravel’s standard interface requirements.
 
-### System-Level Role
+- **System-Level Role**
 
 Within the overall system, Caravel provides programmability and system control, while NetStream functions as a dedicated hardware accelerator for packet processing. This separation enables efficient and scalable edge networking solutions.
 
