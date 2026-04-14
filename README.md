@@ -81,35 +81,35 @@ At a high level, packets enter the system from an external Ethernet PHY via a MA
 ### Key Architectural Characteristics
 
 - **Throughput and Bandwidth**
-- Data width: 8 bits (1 byte per cycle)  
-- Clock frequency: 100 MHz  
-- Peak throughput: ~800 Mbps  
+Data width: 8 bits (1 byte per cycle)  
+Clock frequency: 100 MHz  
+Peak throughput: ~800 Mbps  
 This corresponds approximately to Fast Ethernet-class throughput, and is constrained by the current I/O interface width.
 
 - **I/O Constraints (Caravel Platform)**
-- Packet I/O is currently mapped through Caravel user I/O pins  
-- Limited number of GPIOs restricts interface width  
-- Current design uses serialized 8-bit streaming interface  
+Packet I/O is currently mapped through Caravel user I/O pins  
+Limited number of GPIOs restricts interface width  
+Current design uses serialized 8-bit streaming interface  
 As a result, throughput is limited by I/O bandwidth rather than internal pipeline capability.
 
 - **External Interface Assumptions**
-- Designed to interface with standard Ethernet PHYs (e.g., RMII/MII-compatible MAC)  
-- MAC layer assumed to provide byte-stream interface with valid/ready handshake  
-- Actual deployment may require external MAC integration due to Caravel I/O limitations  
+Designed to interface with standard Ethernet PHYs (e.g., RMII/MII-compatible MAC)  
+MAC layer assumed to provide byte-stream interface with valid/ready handshake  
+Actual deployment may require external MAC integration due to Caravel I/O limitations  
 
 - **Deterministic Latency:** 
-- Pipeline depth: ~220 cycles (worst-case)  
-- At 100 MHz → ~2.2 µs latency  
+Pipeline depth: ~220 cycles (worst-case)  
+At 100 MHz → ~2.2 µs latency  
 Latency is deterministic and independent of packet length due to streaming architecture and early action resolution.
 
 - **Decoupled Data and Control Planes:**  
-  The datapath operates independently of the control logic, enabling efficient hardware acceleration. The control plane doesn't touch the packets in real-time, all the packet-processing is offloaded to the hardware.
+The datapath operates independently of the control logic, enabling efficient hardware acceleration. The control plane doesn't touch the packets in real-time, all the packet-processing is offloaded to the hardware.
 
 - **Use of SRAM Macros for the TCAM and Action memories***
 TCAM and action memories are implemented using SRAM macros, enabling pipelined lookup and improved timing compared to earlier combinational implementations
 
 - **Programmable Behavior:**  
-  Rule tables and actions can be dynamically configured without modifying the hardware pipeline.
+Rule tables and actions can be dynamically configured without modifying the hardware pipeline.
 ---
 
 ### Integration with Caravel
