@@ -371,6 +371,13 @@ Simulation waveforms have been used to verify:
 - Gate-Level Simulation (GLS) will be performed after synthesis  
 - Static Timing Analysis (STA) will be conducted using OpenSTA as part of the OpenLane flow
 
+### Backend Verification
+
+- Static Timing Analysis (STA) performed using OpenSTA  
+- Timing closure achieved at nominal (TT) corner  
+- Multi-corner timing verification (SS/FF) in progress  
+- Gate-Level Simulation (GLS) with SDF back-annotation planned  
+
 ### Verification Criteria
 
 The following conditions are used to determine correctness:
