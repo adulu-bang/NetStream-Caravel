@@ -369,15 +369,48 @@ Simulation waveforms have been used to verify:
 ### Gate-Level and Timing Verification
 
 - Gate-Level Simulation (GLS) will be performed after synthesis  
-- Static Timing Analysis (STA) will be conducted using OpenSTA as part of the OpenLane flow  
+- Static Timing Analysis (STA) will be conducted using OpenSTA as part of the OpenLane flow
 
-### Physical Design Flow
+### Verification Criteria
 
-- Target process: SKY130 (130nm)  
-- RTL-to-GDSII implementation using OpenLane (Already started on the initial RTL iterations)  
-- Includes synthesis, floorplanning, placement, routing, and timing verification
+The following conditions are used to determine correctness:
 
----
+- Correct extraction of header fields from packet stream  
+- Accurate key generation corresponding to input packet fields  
+- Deterministic TCAM match behavior for programmed rules  
+- Correct action selection and application to packet data  
+- No data loss or corruption across pipeline stages  
+- Proper valid/ready handshake behavior across modules  
+
+### Verification Summary
+
+| Feature | Description | Status |
+|--------|------------|--------|
+| Packet parsing | Header extraction and metadata generation | PASS |
+| Key generation | Correct key formation from parsed fields | PASS |
+| TCAM matching | Rule lookup and match detection | PASS |
+| Action execution | Forward / drop / modify operations | PASS |
+| Packet buffering | FIFO alignment with action resolution | PASS |
+| Multi-packet pipeline | Multiple packets in-flight | PARTIAL (3-packets) |
+| Backpressure handling | Valid/ready behavior under stalls | PASS |
+| Corner cases | Malformed / edge packets | PARTIAL |
+
+### Example Test Case
+
+- Input: IPv4 packet with destination port = 80  
+- Rule: Match on destination port = 80 → action = modify DSCP  
+- Expected Behavior:
+  - Packet matched in TCAM  
+  - Action selected correctly  
+  - DSCP field modified in output packet  
+
+Observed result matches expected behavior as verified in waveform.
+
+### Verification Limitations
+
+- Current verification focuses on functional correctness for representative scenarios  
+- Full coverage of corner cases and stress conditions is ongoing  
+- Long-duration and high-throughput stress testing remains to be completed  
 
 
 ## Deliverables
