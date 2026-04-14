@@ -417,11 +417,51 @@ The match-action pipeline enables efficient rule-based packet filtering for secu
 
 ---
 
-##  Feasibility
+## System Feasibility and Bill of Materials (BOM)
 
-- Fits within Caravel user area (~10 mm² constraint)
-- Modular design allows scaling
-- Uses open-source toolchain (OpenLane, SKY130)
+NetStream is designed as a hardware accelerator within an edge networking system.  
+**Tapeout and fabrication costs are excluded**, as they are covered separately (e.g., MPW programs) and do not reflect deployment cost.
+
+### Hardware Components
+
+| Component | Description | Example | Cost (USD) |
+|----------|------------|--------|-----------|
+| NetStream ASIC (Caravel-based) | Packet processing accelerator | Fabricated chip (MPW) | Excluded |
+| Ethernet PHY | Physical layer interface | LAN8720, DP83848 | 2 – 5 |
+| Ethernet MAC | Frame interface (MII/RMII/GMII) | External MAC / soft MAC | 0 – 5 |
+| Host Controller | Control plane + configuration | STM32 / RP2040 / Raspberry Pi | 3 – 15 |
+| Power + PCB | Regulators, connectors, board | — | 8 – 20 |
+
+---
+
+### Estimated System Cost (Excluding ASIC Fabrication)
+
+- **Low-cost configuration (MCU-based):** ~$15 – $30  
+- **Enhanced configuration (Linux-capable host):** ~$25 – $45  
+
+---
+
+### Notes on Cost Assumptions
+
+- Ethernet PHY pricing is based on commonly available 10/100 Mbps parts in low-volume quantities  
+- Ethernet MAC functionality may be:
+  - Integrated within the host (common in MCUs/SoCs), or  
+  - Implemented as a lightweight external/FPGA soft MAC  
+- Host controller cost varies depending on required software stack (bare-metal vs Linux)  
+- PCB cost assumes simple 2–4 layer board typical for edge devices  
+
+---
+
+### Deployment Model
+
+NetStream operates as a hardware accelerator within an edge gateway:
+
+- PHY handles physical signaling  
+- MAC converts Ethernet frames into a byte-stream interface  
+- NetStream performs packet classification and action execution  
+- Host CPU manages control plane and networking stack  
+
+This modular architecture enables cost-effective deployment while maintaining flexibility and scalability.
 
 ---
 
