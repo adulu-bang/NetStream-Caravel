@@ -443,18 +443,53 @@ The project aims to deliver not just a functional chip, but an edge networking s
 
 ## Target Applications
 
-- **Industrial Secure Gateway** :
-NetStream enables deterministic, low-latency filtering of industrial network traffic by enforcing strict rule-based communication policies at the gateway level.
+### 1. Industrial Edge Gateway (Deterministic Filtering)
 
-- **Traffic Prioritization (QoS)** : 
-The design supports real-time classification and prioritization of packets, ensuring that critical control data is transmitted with minimal delay.
+NetStream can be deployed within industrial gateways that connect field devices (PLCs, sensors) to higher-level networks.
 
-- **Edge IoT Data Filtering** :
-NetStream reduces bandwidth and processing overhead by filtering and processing IoT traffic locally before transmission to the cloud.
+- Role: Enforce strict communication policies (allow/deny rules) at line rate  
+- Problem: Software-based filtering introduces latency and unpredictability  
+- Benefit: Deterministic, low-latency packet classification independent of CPU load  
 
-- **Hardware Firewall** :
-The match-action pipeline enables efficient rule-based packet filtering for secure edge deployments.
+---
 
+### 2. QoS Pre-Processing Engine (Traffic Classification)
+
+NetStream performs early packet classification before packets reach the main networking stack.
+
+- Role: Modify packet metadata (e.g., DSCP tagging) based on rules  
+- Problem: CPU-based classification is expensive and scales poorly  
+- Benefit: Offloads classification, allowing the OS/network stack to focus only on scheduling  
+
+---
+
+### 3. Lightweight Edge Firewall (Rule-Based Filtering)
+
+NetStream acts as a hardware firewall in resource-constrained edge devices.
+
+- Role: Drop or allow packets based on configurable rule tables  
+- Problem: Traditional firewall processing consumes CPU and memory bandwidth  
+- Benefit: High-throughput filtering with minimal CPU involvement  
+
+---
+
+### 4. IoT Data Filtering and Pre-Processing
+
+Used in IoT gateways to reduce unnecessary upstream traffic.
+
+- Role: Filter, tag, or modify packets before forwarding to cloud  
+- Problem: Sending all data upstream increases bandwidth and processing cost  
+- Benefit: Local processing reduces bandwidth usage and improves responsiveness  
+
+---
+
+### 5. Deterministic Policy Engine for Edge Networks
+
+NetStream can function as a programmable match-action engine for enforcing network policies.
+
+- Role: Apply rule-based actions with fixed latency  
+- Problem: Software systems introduce variability in processing time  
+- Benefit: Predictable latency (~2.2 µs) enables time-sensitive applications  
 ---
 
 ## System Feasibility and Bill of Materials (BOM)
