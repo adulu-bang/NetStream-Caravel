@@ -137,17 +137,17 @@ NetStream is implemented within the Caravel user project area and interfaces wit
 
 The Caravel management SoC, which includes a RISC-V processor, serves as the control plane for NetStream. It is responsible for:
 
-- Configuring TCAM rule tables for packet classification  
-- Updating action memory entries  
-- Monitoring flow statistics
-- Managing system-level control and debugging  
+Configuring TCAM rule tables for packet classification  
+Updating action memory entries  
+Monitoring flow statistics
+Managing system-level control and debugging  
 
 All configuration and control operations are performed via memory-mapped registers exposed through a Wishbone slave interface implemented in the NetStream design.
 
 - **I/O Integration**
 
-- Packet I/O is interfaced through GPIO or dedicated user I/O pins connected to an external Ethernet MAC/PHY.  
-- The design is integrated into the `user_project_wrapper`, adhering to Caravel’s standard interface requirements.
+Packet I/O is interfaced through GPIO or dedicated user I/O pins connected to an external Ethernet MAC/PHY.  
+The design is integrated into the `user_project_wrapper`, adhering to Caravel’s standard interface requirements.
 
 - **System-Level Role**
 
