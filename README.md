@@ -80,17 +80,33 @@ At a high level, packets enter the system from an external Ethernet PHY via a MA
 
 ### Key Architectural Characteristics
 
-- **Streaming, Line-Rate Processing:**  
-  Packets are processed in a pipelined manner without stalling on memory accesses.
+- **Throughput and Bandwidth**
+- Data width: 8 bits (1 byte per cycle)  
+- Clock frequency: 100 MHz  
+- Peak throughput: ~800 Mbps  
+This corresponds approximately to Fast Ethernet-class throughput, and is constrained by the current I/O interface width.
 
-- **Deterministic Latency:**  
-  Fixed processing stages ensure predictable timing, critical for industrial applications. Since the packet is forwarded for the action as soona as the action arrives, the latency does not depend on the packet length, and has been calculated to be ~220 clock cycles in the worst case.
+- **I/O Constraints (Caravel Platform)**
+- Packet I/O is currently mapped through Caravel user I/O pins  
+- Limited number of GPIOs restricts interface width  
+- Current design uses serialized 8-bit streaming interface  
+As a result, throughput is limited by I/O bandwidth rather than internal pipeline capability.
+
+- **External Interface Assumptions**
+- Designed to interface with standard Ethernet PHYs (e.g., RMII/MII-compatible MAC)  
+- MAC layer assumed to provide byte-stream interface with valid/ready handshake  
+- Actual deployment may require external MAC integration due to Caravel I/O limitations  
+
+- **Deterministic Latency:** 
+- Pipeline depth: ~220 cycles (worst-case)  
+- At 100 MHz → ~2.2 µs latency  
+Latency is deterministic and independent of packet length due to streaming architecture and early action resolution.
 
 - **Decoupled Data and Control Planes:**  
   The datapath operates independently of the control logic, enabling efficient hardware acceleration. The control plane doesn't touch the packets in real-time, all the packet-processing is offloaded to the hardware.
 
 - **Use of SRAM Macros for the TCAM and Action memories***
-  Memory components such as the TCAM and action storage are currently modeled in RTL and are intended to be implemented using SRAM-based macros in the final design, which will further optimize area and timing.
+TCAM and action memories are implemented using SRAM macros, enabling pipelined lookup and improved timing compared to earlier combinational implementations
 
 - **Programmable Behavior:**  
   Rule tables and actions can be dynamically configured without modifying the hardware pipeline.
