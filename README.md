@@ -451,7 +451,6 @@ NetStream can be deployed within industrial gateways that connect field devices 
 - Problem: Software-based filtering introduces latency and unpredictability  
 - Benefit: Deterministic, low-latency packet classification independent of CPU load  
 
----
 
 ### 2. QoS Pre-Processing Engine (Traffic Classification)
 
@@ -461,7 +460,6 @@ NetStream performs early packet classification before packets reach the main net
 - Problem: CPU-based classification is expensive and scales poorly  
 - Benefit: Offloads classification, allowing the OS/network stack to focus only on scheduling  
 
----
 
 ### 3. Lightweight Edge Firewall (Rule-Based Filtering)
 
@@ -471,7 +469,6 @@ NetStream acts as a hardware firewall in resource-constrained edge devices.
 - Problem: Traditional firewall processing consumes CPU and memory bandwidth  
 - Benefit: High-throughput filtering with minimal CPU involvement  
 
----
 
 ### 4. IoT Data Filtering and Pre-Processing
 
@@ -481,7 +478,6 @@ Used in IoT gateways to reduce unnecessary upstream traffic.
 - Problem: Sending all data upstream increases bandwidth and processing cost  
 - Benefit: Local processing reduces bandwidth usage and improves responsiveness  
 
----
 
 ### 5. Deterministic Policy Engine for Edge Networks
 
@@ -490,7 +486,7 @@ NetStream can function as a programmable match-action engine for enforcing netwo
 - Role: Apply rule-based actions with fixed latency  
 - Problem: Software systems introduce variability in processing time  
 - Benefit: Predictable latency (~2.2 µs) enables time-sensitive applications  
----
+
 
 ## System Feasibility and Bill of Materials (BOM)
 
