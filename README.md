@@ -115,8 +115,18 @@ The datapath operates independently of the control logic, enabling efficient har
 TCAM and action memories are implemented using SRAM macros, enabling pipelined lookup and improved timing compared to earlier combinational implementations
 
 - **Programmable Behavior:**
- 
 Rule tables and actions can be dynamically configured without modifying the hardware pipeline.
+
+### System Summary
+
+| Parameter | Value |
+|----------|------|
+| Clock frequency | 100 MHz |
+| Data width | 8 bits |
+| Throughput | ~800 Mbps |
+| Latency | ~2.2 µs |
+| Processing style | Fully pipelined |
+
 ---
 
 ### Integration with Caravel
