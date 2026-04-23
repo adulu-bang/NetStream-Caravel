@@ -124,39 +124,84 @@ assign io_oeb[21]    = 0; // rx_ready
 assign io_oeb[`MPRJ_IO_PADS-1:22] = {(`MPRJ_IO_PADS-22){1'b1}};
 assign io_out[`MPRJ_IO_PADS-1:22] = 0;
 
+// ---------------- WISHBONE DECODER ----------------
+
+    // Wishbone active flags
+    wire wb_valid = wbs_cyc_i & wbs_stb_i;
+    wire wb_write = wb_valid & wbs_we_i;
+
+    // Payloads
+    reg [31:0] tcam_payload_0, tcam_payload_1, tcam_payload_2, tcam_payload_3;
+    reg [31:0] action_payload_0, action_payload_1;
+
+    wire [127:0] tcam_data_out = {tcam_payload_3, tcam_payload_2, tcam_payload_1, tcam_payload_0};
+    wire [63:0]  action_data_out = {action_payload_1, action_payload_0};
+
+    // Control registers
+    reg cfg_tcam_wr_en;
+    reg cfg_tcam_wr_is_mask;
+    reg [4:0] cfg_tcam_wr_addr;
+
+    reg cfg_action_wr_en;
+    reg [4:0] cfg_action_wr_addr;
+    reg cfg_action_wr_default;
+
+    reg wbs_ack;
+    assign wbs_ack_o = wbs_ack;
 
 
-    // ---------------- LA CONTROL ----------------
+    always @(posedge wb_clk_i) begin
+        if (wb_rst_i) begin
+            wbs_ack <= 0;
+            cfg_tcam_wr_en <= 0;
+            cfg_action_wr_en <= 0;
+            cfg_action_wr_default <= 0;
+        end else begin
+            cfg_tcam_wr_en <= 0;
+            cfg_action_wr_en <= 0;
+            cfg_action_wr_default <= 0;
 
-    wire cfg_valid  = ~la_oenb[0] ? la_data_in[0] : 1'b0;
-    wire cfg_select = ~la_oenb[1] ? la_data_in[1] : 1'b0;
-    wire wr_en      = ~la_oenb[2] ? la_data_in[2] : 1'b0;
-    wire wr_is_mask = ~la_oenb[3] ? la_data_in[3] : 1'b0;
+            if (wb_valid && !wbs_ack) begin
+                wbs_ack <= 1;
+                
+                if (wb_write) begin
+                    case (wbs_adr_i[7:0])
 
-    wire [3:0] cfg_addr   = la_data_in[7:4];
+                        // TCAM Payloads
+                        8'h00: tcam_payload_0 <= wbs_dat_i;
+                        8'h04: tcam_payload_1 <= wbs_dat_i;
+                        8'h08: tcam_payload_2 <= wbs_dat_i;
+                        8'h0C: tcam_payload_3 <= wbs_dat_i;
 
-    wire [31:0] data_low  = la_data_in[39:8];
-    wire [31:0] data_mid  = la_data_in[71:40];
-    wire [31:0] data_high = la_data_in[103:72];
-    wire [23:0] data_top  = la_data_in[127:104];
+                        8'h10: begin // VALUE write
+                            cfg_tcam_wr_addr <= wbs_dat_i[4:0];
+                            cfg_tcam_wr_is_mask <= 0;
+                            cfg_tcam_wr_en <= 1;              
+                        end
+                        8'h14: begin // MASK write
+                            cfg_tcam_wr_addr <= wbs_dat_i[4:0];
+                            cfg_tcam_wr_is_mask <= 1;
+                            cfg_tcam_wr_en <= 1;
+                        end
 
-    wire [127:0] tcam_data =
-        {8'b0,data_top, data_high, data_mid, data_low};
+                        // ACTION Payloads
+                        8'h20: action_payload_0 <= wbs_dat_i;
+                        8'h24: action_payload_1 <= wbs_dat_i;
 
-    wire [63:0] action_data =
-        {data_high, data_mid};
-
-    // decode control
-    wire cfg_tcam_wr_en        = cfg_valid & (~cfg_select) & wr_en;
-    wire cfg_tcam_wr_is_mask   = wr_is_mask;
-    wire [3:0] cfg_tcam_wr_addr = cfg_addr;
-
-    wire cfg_action_wr_en      = cfg_valid & (cfg_select) & wr_en;
-    wire [3:0] cfg_action_wr_addr = cfg_addr;
-
-    wire cfg_action_wr_default = 1'b0;
-    wire [63:0] cfg_action_default_data = 64'd0;
-
+                        8'h28: begin // ACTION write
+                            cfg_action_wr_addr <= wbs_dat_i[4:0];
+                            cfg_action_wr_en <= 1;
+                        end
+                        8'h2C: begin // DEFAULT ACTION write
+                            cfg_action_wr_default <= 1;
+                        end
+                    endcase
+                end
+            end else begin
+                wbs_ack <= 0; 
+            end
+        end
+    end
 
 dataplane_top u_dataplane (
     `ifdef USE_POWER_PINS
@@ -180,18 +225,15 @@ dataplane_top u_dataplane (
     .cfg_tcam_wr_en(cfg_tcam_wr_en),
     .cfg_tcam_wr_is_mask(cfg_tcam_wr_is_mask),
     .cfg_tcam_wr_addr(cfg_tcam_wr_addr),
-    .cfg_tcam_wr_data(tcam_data),
+    .cfg_tcam_wr_data(tcam_data_out),
 
     .cfg_action_wr_en(cfg_action_wr_en),
     .cfg_action_wr_addr(cfg_action_wr_addr),
-    .cfg_action_wr_data(action_data),
+    .cfg_action_wr_data(action_data_out),
     .cfg_action_wr_default(cfg_action_wr_default),
-    .cfg_action_default_data(cfg_action_default_data)
+    .cfg_action_default_data(action_data_out)
 );
 
-
-
-assign wbs_ack_o = 0;
 assign wbs_dat_o = 0;
 assign la_data_out = 0;
 assign user_irq = 0;
