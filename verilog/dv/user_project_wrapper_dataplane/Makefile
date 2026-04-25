@@ -2,10 +2,10 @@
 ## --- ALL Efabless/Caravel Environment Variables ---
 export CARAVEL_PATH         = ../../../../caravel/verilog
 export VERILOG_PATH         = ../../../../mgmt_core_wrapper/verilog
-export USER_PROJECT_VERILOG = ../../../../verilog
+export USER_PROJECT_VERILOG = ../../../verilog
 export MCW_ROOT             = ../../../../mgmt_core_wrapper
 export CORE_VERILOG_PATH    = ../../../../mgmt_core_wrapper/verilog
-export PDK_ROOT             = /home/parthip_dev/NetStream-Caravel/dependencies/pdks/ciel/sky130/versions/3e0e31dcce8519a7dbb82590346db16d91b7244f
+export PDK_ROOT             = ..
 export PDK                  = sky130A
 
 RISCV_GCC     = riscv64-unknown-elf-gcc
@@ -25,16 +25,13 @@ firmware.hex: main.c start.s sections.lds
 	@echo "Firmware compiled OK"
 
 sim: firmware.hex
-	iverilog -g2012 \
+	iverilog -g2012 -s user_project_wrapper \
 		-DFUNCTIONAL -DSIM -DUNIT_DELAY=\#1 -DUSE_POWER_PINS \
 		-I ../../../../verilog/rtl \
 		-I ../../../../caravel/verilog/rtl \
 		-o sim.out \
-		../../../../caravel/verilog/rtl/defines.v \
-		-f ../../../../mgmt_core_wrapper/verilog/includes/includes.rtl.caravel \
-		tb_firmware.v \
-		../../../../verilog/rtl/user_project_wrapper.v \
-		../../../../verilog/rtl/dataplane_top_stub.v
+		-f ../../../verilog/includes/includes.rtl.caravel_user_project \
+		tb_firmware.v
 	vvp sim.out | tee sim.log
 
 wave:

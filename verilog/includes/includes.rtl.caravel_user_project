@@ -14,7 +14,25 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Caravel user project includes
--v $(USER_PROJECT_VERILOG)/rtl/user_project_wrapper.v	     
--v $(USER_PROJECT_VERILOG)/rtl/user_proj_example.v
+-v $(USER_PROJECT_VERILOG)/rtl/action_drain_ctrl_upper.v
+-v $(USER_PROJECT_VERILOG)/rtl/defines.v
+-v $(USER_PROJECT_VERILOG)/rtl/mac_rx_fifo_final.v
+-v $(USER_PROJECT_VERILOG)/rtl/rewrite_mux_upper.v
+-v $(USER_PROJECT_VERILOG)/rtl/user_defines.v
+-v $(USER_PROJECT_VERILOG)/rtl/action_pipe.v
+-v $(USER_PROJECT_VERILOG)/rtl/header_buffer_pipe_fifo.v
+-v $(USER_PROJECT_VERILOG)/rtl/packet_fifo_upper.v
+-v $(USER_PROJECT_VERILOG)/rtl/tcam_ctrl_pipe.v
+-v $(USER_PROJECT_VERILOG)/rtl/user_project_wrapper.v
+-v $(USER_PROJECT_VERILOG)/rtl/counter.v
+-v $(USER_PROJECT_VERILOG)/rtl/header_to_parser_pipe_reg.v
+-v $(USER_PROJECT_VERILOG)/rtl/parser_fsm_pipe_2.v
+-v $(USER_PROJECT_VERILOG)/rtl/tcam_to_action_pipe.v
+#-v $(USER_PROJECT_VERILOG)/rtl/user_proj_example.v
+-v $(USER_PROJECT_VERILOG)/rtl/dataplane_top.v
+-v $(USER_PROJECT_VERILOG)/rtl/key_builder_pipe.v
+-v $(USER_PROJECT_VERILOG)/rtl/parser_to_key_pipe.v
+-v $(USER_PROJECT_VERILOG)/rtl/sky130_sram_1kbyte_1rw1r_32x256_8.v
+#-v $(USER_PROJECT_VERILOG)/rtl/uprj_netlists.v
 
  
