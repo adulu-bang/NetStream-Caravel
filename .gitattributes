@@ -5,3 +5,6 @@
 *.mag filter=lfs diff=lfs merge=lfs -text
 *.def filter=lfs diff=lfs merge=lfs -text
 *.v filter=lfs diff=lfs merge=lfs -text
+mag/user_project_wrapper.mag filter=lfs diff=lfs merge=lfs -text
+openlane/user_project_wrapper/dataplane_final/gds/dataplane_top.gds filter=lfs diff=lfs merge=lfs -text
+gds/user_project_wrapper.gds filter=lfs diff=lfs merge=lfs -text
