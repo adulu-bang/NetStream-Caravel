@@ -6,14 +6,14 @@ module tcam_to_action_pipe (
 
     input        tcam_valid,// frm prev pipeline reg (key_valid)
     input        tcam_hit,
-    input [3:0]  tcam_hit_index,
+    input [4:0]  tcam_hit_index,
 
     output       tcam_ready,
 
     output reg        action_valid,
     input             action_ready,
     output reg        action_hit,
-    output reg [3:0]  action_index
+    output reg [4:0]  action_index 
 );
 
     assign tcam_ready = !action_valid;

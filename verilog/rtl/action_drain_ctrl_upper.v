@@ -15,6 +15,26 @@ module action_drain_ctrl_upper #(
     output reg [ACTION_W-1:0] action_out
 );
 
+
+reg action_valid_d;
+initial begin
+    action_valid_d = 0;
+end
+always @(posedge clk) begin
+    action_valid_d <= action_valid;
+end
+
+
+reg action_valid_dd;
+initial begin
+    action_valid_dd = 0;
+end
+always @(posedge clk) begin
+    action_valid_dd <= action_valid_d;
+end
+
+
+
 always @(posedge clk) begin
     if (!rst_n) begin
         allow_drain <= 1'b0;
@@ -24,7 +44,7 @@ always @(posedge clk) begin
         allow_drain <= 1'b0;
 
         // one pulse = one packet credit
-        if (action_valid) begin
+        if (action_valid_dd) begin
             allow_drain <= 1'b1;
             action_out  <= action_in;
         end

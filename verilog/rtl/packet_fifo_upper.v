@@ -34,7 +34,7 @@ module packet_fifo_upper #(
     reg [7:0] mem      [0:DEPTH-1];
     reg       mem_last [0:DEPTH-1];
 
-    reg [ADDR_W:0] wr_ptr, rd_ptr;
+    reg [ADDR_W:0] wr_ptr, rd_ptr; 
     reg [ADDR_W:0] count;
 
     assign wr_ready = (count < DEPTH);

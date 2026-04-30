@@ -1,12 +1,16 @@
 {
   "DESIGN_NAME": "dataplane_top", 
 
-  
+    "VERILOG_DEFINES": [
+    "USE_POWER_PINS",
+    "FLOW"
+  ],
+
 
 
 
   "EXTRA_VERILOG_MODELS": [
-   "dir::macros/sram_32x32/sky130_sram_1kbyte_1rw1r_32x256_8.v"
+   "dir::dffram/RAM32/pnl/RAM32.pnl.v"
 ],
 
   "VERILOG_FILES": [
@@ -25,54 +29,150 @@
     "dir::../../verilog/rtl/tcam_to_action_pipe.v"
   ],
 
-"MACROS": {
 
-  "sky130_sram_1kbyte_1rw1r_32x256_8": {
-    "gds": "dir::macros/sram_32x32/sky130_sram_1kbyte_1rw1r_32x256_8.gds",
-    "lef": "dir::macros/sram_32x32/sky130_sram_1kbyte_1rw1r_32x256_8.lef",
-    "lib": {
-      "tt": "dir::macros/sram_32x32/sky130_sram_1kbyte_1rw1r_32x256_8_TT_1p8V_25C.lib"
-    }
+
+"STA_CORNERS": ["nom_tt_025C_1v80"],
+
+
+"MACROS": {
+  "RAM32": {
+    "instances": {
+      "u_tcam_ctrl_pipe.VALUE_MEM[0].value_mem": {
+        "location": [100, 100],
+        "orientation": "N"
+      },
+      "u_tcam_ctrl_pipe.VALUE_MEM[1].value_mem": {
+        "location": [610, 100],
+        "orientation": "N"
+      },
+       "u_tcam_ctrl_pipe.VALUE_MEM[2].value_mem": {
+        "location": [1120, 100],
+        "orientation": "N"
+      },
+       "u_tcam_ctrl_pipe.VALUE_MEM[3].value_mem": {
+        "location": [1630, 100],
+        "orientation": "N"
+      },
+       "u_tcam_ctrl_pipe.MASK_MEM[0].mask_mem": {
+        "location": [100, 550],
+        "orientation": "N"
+      },
+       "u_tcam_ctrl_pipe.MASK_MEM[1].mask_mem": {
+        "location": [610, 550],
+        "orientation": "N"
+      },
+       "u_tcam_ctrl_pipe.MASK_MEM[2].mask_mem": {
+        "location": [1120, 550],
+        "orientation": "N"
+      },
+       "u_tcam_ctrl_pipe.MASK_MEM[3].mask_mem": {
+        "location": [1630, 550],
+        "orientation": "N"
+      },
+
+
+
+      "u_action_pipe.ACTION_MEM[0].action_mem": {
+        "location": [100, 1000],
+        "orientation": "N"
+      },
+
+      "u_action_pipe.ACTION_MEM[1].action_mem": {
+        "location": [610, 1000],
+        "orientation": "N"
+      }
+    },
+
+    "gds": [
+      "dir::dffram/RAM32/gds/RAM32.gds"
+    ],
+
+    "lef": [
+      "dir::dffram/RAM32/lef/RAM32.lef"
+    ],
+
+    "nl": [],
+
+    "spef": {},
+
+   "lib": {
+      "*": [
+    		"dir::dffram/RAM32/lib/nom_tt_025C_1v80/RAM32__nom_tt_025C_1v80.lib"
+  	]
+
+    }, 
+
+    "spice": [],
+    "sdf": {}
   }
- 
 },
 
 
 
   "CLOCK_PORT": "clk",
-  "CLOCK_PERIOD": 10,
+  "CLOCK_PERIOD": 25,
 
  "FP_SIZING": "relative",
-  "FP_CORE_UTIL": 25, 
+  "FP_CORE_UTIL": 35, 
 
-  "PL_TARGET_DENSITY_PCT": 45,
+  "PL_TARGET_DENSITY_PCT": 40,
 
 
   "MAX_TRANSITION_CONSTRAINT": 1.5,
-  "MAX_FANOUT_CONSTRAINT": 16,
-  "MACRO_PLACEMENT_CFG": "dir::macro.cfg",
+  "MAX_FANOUT_CONSTRAINT": 8,
+
 
 
 
 
   "RUN_CTS": true,
+  "RUN_MAGIC_DRC" : false,
 
   "RUN_ANTENNA_REPAIR": true,
   "RUN_HEURISTIC_DIODE_INSERTION": true,
 
 
+
+  
   "VDD_NETS": ["vccd1"],
   "GND_NETS": ["vssd1"],
 
-  "DPL_CELL_PADDING": 2,
-  "GPL_CELL_PADDING": 2,
+ 
+
+  "DPL_CELL_PADDING": 4,
+  "GPL_CELL_PADDING": 4,
 
 "MAGIC_DRC_USE_GDS": false,
 "MAGIC_CAPTURE_ERRORS": false,
 
 
 "RUN_TAP_ENDCAP_INSERTION": true,
-"FP_TAPCELL_DIST": 10,
+"FP_TAPCELL_DIST": 7,
+
+"RUN_POST_CTS_RESIZER_TIMING": true,
+"PL_RESIZER_SETUP_SLACK_MARGIN": 0.2,
+"PL_RESIZER_HOLD_SLACK_MARGIN": 0.4,
+"PL_RESIZER_HOLD_MAX_BUFFER_PCT": 100,
+"PL_RESIZER_SETUP_MAX_BUFFER_PCT": 90,
+
+"RUN_POST_GRT_RESIZER_TIMING": true,
+"GRT_RESIZER_HOLD_SLACK_MARGIN" : 0.5,
+"GRT_RESIZER_HOLD_MAX_BUFFER_PCT": 90, 
+
+
+
+"RUN_POST_GRT_RESIZER_TIMING": true,
+"GRT_RESIZER_HOLD_SLACK_MARGIN": 0.4,
+"GRT_RESIZER_HOLD_MAX_BUFFER_PCT": 100,
+"GRT_RESIZER_ALLOW_SETUP_VIOS": true,
+
+"FP_PDN_MACRO_HOOKS": [
+  "u_tcam_ctrl_pipe.VALUE_MEM.*value_mem vccd1 vssd1 VPWR VGND",
+  "u_tcam_ctrl_pipe.MASK_MEM.*mask_mem vccd1 vssd1 VPWR VGND",
+  "u_action_pipe.ACTION_MEM.*action_mem vccd1 vssd1 VPWR VGND"
+],
+
+
 
 
   "FALLBACK_SDC_FILE": "dir::constraints.sdc",

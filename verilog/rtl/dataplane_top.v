@@ -1,3 +1,4 @@
+/// sta-blackbox
 `define USE_POWER_PINS
 `timescale 1ns / 1ps
 module dataplane_top #(
@@ -131,7 +132,10 @@ module dataplane_top #(
 
     //parser fsm
     wire parser_valid;
-    wire parser_ready = 1'b1; // next stage is combinational
+    //wire parser_ready = 1'b1; // next stage is combinational
+
+    reg parser_ready_r;
+always @(posedge clk) parser_ready_r <= 1'b1;
 
     wire pkt_start, pkt_end;
     wire [15:0] l2_offset, l3_offset, l4_offset;
@@ -152,7 +156,7 @@ module dataplane_top #(
         .hdr_flat     (hdr_flat),
         .hdr_ready    (hdr_ready),
         .parser_valid (parser_valid),
-        .parser_ready (parser_ready),
+        .parser_ready (parser_ready_r),
 
         .pkt_start    (pkt_start),
         .pkt_end      (pkt_end),
@@ -276,6 +280,9 @@ tcam_ctrl_pipe u_tcam_ctrl_pipe (
 
 //tcam to action pipeline
 
+reg action_meta_ready_r;
+always @(posedge clk) action_meta_ready_r <= 1'b1;
+
 wire action_meta_valid;
 wire action_meta_ready;
 wire action_hit;
@@ -292,7 +299,7 @@ tcam_to_action_pipe u_tcam_to_action_pipe (
     .tcam_ready(key_ready),
 
     .action_valid(action_meta_valid),
-    .action_ready(action_meta_ready),
+    .action_ready(action_meta_ready_r),
     .action_hit(action_hit),
     .action_index(action_index)
 );
@@ -323,7 +330,7 @@ action_pipe u_action_pipe (
     .default_data (cfg_action_default_data)
 );
 
-assign action_meta_ready = 1'b1; // no backpressure for now
+//assign action_meta_ready = 1'b1; // no backpressure for now
 
 
 
@@ -367,8 +374,12 @@ action_drain_ctrl_upper u_action_drain_ctrl_upper (
 
 //pkt fifo for entire pkt
 wire        pf_rd_valid;
-wire [7:0]  pf_rd_data;
+wire [7:0]  pf_rd_data; 
 wire        pf_rd_last;
+
+// reg fifo_fire_valid_r;
+// always @(posedge clk) fifo_fire_valid_r <= fifo_fire && fifo_valid;
+
 
 packet_fifo_upper #(
     .DEPTH (PKT_FIFO_DEPTH)

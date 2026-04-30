@@ -5,7 +5,7 @@
 //     parameter ENTRIES = 16
 // )(
 //     input                       clk,
-//     input                       rst_n,
+//     input                       rst_n, 
 
     
 //     input  [KEY_W-1:0]          key,// frm key builder
@@ -90,133 +90,133 @@
 
 
 
-`define USE_POWER_PINS
-module tcam_ctrl_pipe #(
-    parameter KEY_W   = 128,
-    parameter ENTRIES = 32
-)(
-    inout vccd1,
-    inout vssd1,
+// `define USE_POWER_PINS
+// module tcam_ctrl_pipe #(
+//     parameter KEY_W   = 128,
+//     parameter ENTRIES = 32
+// )(
+//     inout vccd1,
+//     inout vssd1,
 
-    input clk,
-    input rst_n,
+//     input clk,
+//     input rst_n,
 
-    input [KEY_W-1:0] key,
-    input key_valid,
+//     input [KEY_W-1:0] key,
+//     input key_valid,
 
-    input wr_en,
-    input wr_is_mask,
-    input [$clog2(ENTRIES)-1:0] wr_addr,
-    input [KEY_W-1:0] wr_data,
+//     input wr_en,
+//     input wr_is_mask,
+//     input [$clog2(ENTRIES)-1:0] wr_addr,
+//     input [KEY_W-1:0] wr_data,
 
-    output reg hit,
-    output reg [$clog2(ENTRIES)-1:0] hit_index,
+//     output reg hit,
+//     output reg [$clog2(ENTRIES)-1:0] hit_index,
 
-    output reg tcam_valid
-);
+//     output reg tcam_valid
+// );
 
-localparam IDX_W = $clog2(ENTRIES);
-
-
-wire [32:0] val_out [0:3];
-wire [32:0] mask_out [0:3];
+// localparam IDX_W = $clog2(ENTRIES);
 
 
-genvar i;
-generate
-    for (i = 0; i < 4; i = i + 1) begin : VALUE_MEM
-
-        sram_32x32 value_mem (
-            `ifdef USE_POWER_PINS
-    .vccd1(vccd1),
-    .vssd1(vssd1),
-`endif
-
-    .clk0(clk),
-      .csb0(1'b0),
-    .addr0({1'b0, (wr_en ? wr_addr : scan_addr)}),
-    .din0({1'b0, wr_data[32*i +: 32]}),
-    .spare_wen0(1'b0),
-    .dout0(val_out[i]),
-    .web0(~(wr_en && !wr_is_mask))
-);
-
-    end
-endgenerate
-
-generate
-    for (i = 0; i < 4; i = i + 1) begin : MASK_MEM
-
-       sram_32x32 mask_mem (
-     `ifdef USE_POWER_PINS
-    .vccd1(vccd1),
-    .vssd1(vssd1),
-`endif   
-
-    .clk0(clk),
-    .csb0(1'b0),
-    .addr0({1'b0, (wr_en ? wr_addr :  scan_addr)}),
-    .spare_wen0(1'b0),
-    .din0({1'b0, wr_data[32*i +: 32]}),
-    .dout0(mask_out[i]),
-    .web0(~(wr_en && wr_is_mask))
-);
-
-    end
-endgenerate
+// wire [32:0] val_out [0:3];
+// wire [32:0] mask_out [0:3];
 
 
-reg [127:0] value_r, mask_r;
+// genvar i;
+// generate
+//     for (i = 0; i < 4; i = i + 1) begin : VALUE_MEM
 
-always @(posedge clk) begin
-    value_r <= {val_out[3][31:0], val_out[2][31:0], val_out[1][31:0], val_out[0][31:0]};
-    mask_r  <= {mask_out[3][31:0], mask_out[2][31:0], mask_out[1][31:0], mask_out[0][31:0]};
-end
+//         sram_32x32 value_mem (
+//             `ifdef USE_POWER_PINS
+//     .vccd1(vccd1),
+//     .vssd1(vssd1),
+// `endif
+
+//     .clk0(clk),
+//       .csb0(1'b0),
+//     .addr0({1'b0, (wr_en ? wr_addr : scan_addr)}),
+//     .din0({1'b0, wr_data[32*i +: 32]}),
+//     .spare_wen0(1'b0),
+//     .dout0(val_out[i]),
+//     .web0(~(wr_en && !wr_is_mask))
+// );
+
+//     end
+// endgenerate
+
+// generate
+//     for (i = 0; i < 4; i = i + 1) begin : MASK_MEM
+
+//        sram_32x32 mask_mem (
+//      `ifdef USE_POWER_PINS
+//     .vccd1(vccd1),
+//     .vssd1(vssd1),
+// `endif   
+
+//     .clk0(clk),
+//     .csb0(1'b0),
+//     .addr0({1'b0, (wr_en ? wr_addr :  scan_addr)}),
+//     .spare_wen0(1'b0),
+//     .din0({1'b0, wr_data[32*i +: 32]}),
+//     .dout0(mask_out[i]),
+//     .web0(~(wr_en && wr_is_mask))
+// );
+
+//     end
+// endgenerate
 
 
-reg [IDX_W-1:0] scan_addr;
-reg scanning;
+// reg [127:0] value_r, mask_r;
 
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n) begin
-        scan_addr   <= 0;
-        scanning    <= 0;
-        hit         <= 0;
-        tcam_valid  <= 0;
-        hit_index   <= 0;
+// always @(posedge clk) begin
+//     value_r <= {val_out[3][31:0], val_out[2][31:0], val_out[1][31:0], val_out[0][31:0]};
+//     mask_r  <= {mask_out[3][31:0], mask_out[2][31:0], mask_out[1][31:0], mask_out[0][31:0]};
+// end
 
-    end else begin
 
-        // default
-        tcam_valid <= 0;
+// reg [IDX_W-1:0] scan_addr;
+// reg scanning;
 
-        if (key_valid && !scanning) begin
-            scanning   <= 1;
-            scan_addr  <= 0;
-            hit        <= 0;
-            hit_index <=0;
-        end 
+// always @(posedge clk or negedge rst_n) begin
+//     if (!rst_n) begin
+//         scan_addr   <= 0;
+//         scanning    <= 0;
+//         hit         <= 0;
+//         tcam_valid  <= 0;
+//         hit_index   <= 0;
 
-        else if (scanning) begin
+//     end else begin
 
-            // match logic
-            if (((key & ~mask_r) == (value_r & ~mask_r)) && !hit) begin
-                hit       <= 1;
-                hit_index <= scan_addr;
-            end
+//         // default
+//         tcam_valid <= 0;
 
-            scan_addr <= scan_addr + 1;
+//         if (key_valid && !scanning) begin
+//             scanning   <= 1;
+//             scan_addr  <= 0;
+//             hit        <= 0;
+//             hit_index <=0;
+//         end 
 
-            // END condition
-            if (scan_addr == ENTRIES-1) begin
-                scanning   <= 0;
-                tcam_valid <= 1;   
-            end
-        end
-    end
-end
+//         else if (scanning) begin
 
-endmodule
+//             // match logic
+//             if (((key & ~mask_r) == (value_r & ~mask_r)) && !hit) begin
+//                 hit       <= 1;
+//                 hit_index <= scan_addr;
+//             end
+
+//             scan_addr <= scan_addr + 1;
+
+//             // END condition
+//             if (scan_addr == ENTRIES-1) begin
+//                 scanning   <= 0;
+//                 tcam_valid <= 1;   
+//             end
+//         end
+//     end
+// end
+
+// endmodule
 
 
 
@@ -373,6 +373,545 @@ endmodule
 //             if (scan_addr == ENTRIES-1) begin
 //                 scanning   <= 0;
 //                 tcam_valid <= 1;   
+//             end
+//         end
+//     end
+// end
+
+// endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+`define USE_POWER_PINS
+module tcam_ctrl_pipe #(
+    parameter KEY_W   = 128,
+    parameter ENTRIES = 32
+)(
+    inout vccd1,
+    inout vssd1,
+
+    input clk,
+    input rst_n,
+
+    input [KEY_W-1:0] key,
+    input key_valid,
+
+    input wr_en,
+    input wr_is_mask,
+    input [$clog2(ENTRIES)-1:0] wr_addr,
+    input [KEY_W-1:0] wr_data,
+
+    output reg hit,
+    output reg [$clog2(ENTRIES)-1:0] hit_index,
+
+    output reg tcam_valid
+);
+
+localparam IDX_W = $clog2(ENTRIES);
+
+wire [31:0] val_out [0:3];
+wire [31:0] mask_out [0:3];
+
+wire [IDX_W-1:0] val_addr_mux;
+assign val_addr_mux = (wr_en_f && !wr_is_mask_f) ? wr_addr : scan_addr;
+
+wire [IDX_W-1:0] mask_addr_mux;
+assign mask_addr_mux = (wr_en_f && wr_is_mask_f) ? wr_addr : scan_addr;
+
+genvar i;
+
+
+reg wire_en_d;
+reg wire_is_mask_d;
+
+initial begin
+    wire_en_d = 0;
+    wire_is_mask_d = 0;
+end
+
+always @(posedge clk) begin
+    wire_en_d <= wr_en;
+    wire_is_mask_d <= wr_is_mask;
+end
+
+wire wr_en_f;
+assign wr_en_f = wr_en || wire_en_d;
+wire wr_is_mask_f;
+assign wr_is_mask_f = wr_is_mask || wire_is_mask_d;
+
+// VALUE SRAMs
+generate
+    for (i = 0; i < 4; i = i + 1) begin : VALUE_MEM
+
+        RAM32 value_mem (
+            .CLK  (clk),
+            .EN0  (1'b1),
+
+`ifdef USE_POWER_PINS
+            .VPWR (vccd1),
+            .VGND (vssd1),
+`endif
+
+            // Address: write OR scan
+            .A0 (val_addr_mux[4:0]),
+
+            .Di0  (wr_data[32*i +: 32]),
+            .Do0  (val_out[i]),
+
+            // Write enable
+            .WE0  (wr_en_f && !wr_is_mask_f ? 4'b1111 : 4'b0000)
+        );
+
+    end
+endgenerate
+
+// MASK SRAMs 
+generate
+    for (i = 0; i < 4; i = i + 1) begin : MASK_MEM
+
+        RAM32 mask_mem (
+            .CLK  (clk),
+            .EN0  (1'b1),
+
+`ifdef USE_POWER_PINS
+            .VPWR (vccd1),
+            .VGND (vssd1),
+`endif
+
+            .A0 (mask_addr_mux[4:0]),
+
+            .Di0  (wr_data[32*i +: 32]),
+            .Do0  (mask_out[i]),
+
+            .WE0  (wr_en_f && wr_is_mask_f ? 4'b1111 : 4'b0000)
+        );
+
+    end
+endgenerate
+
+
+reg [127:0] value_r, mask_r;
+
+always @(posedge clk) begin
+    value_r <= {val_out[3], val_out[2], val_out[1], val_out[0]};
+    mask_r  <= {mask_out[3], mask_out[2], mask_out[1], mask_out[0]};
+end
+
+
+reg [IDX_W-1:0] scan_addr;
+reg scanning;
+
+always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) begin
+        scan_addr   <= 0;
+        scanning    <= 0;
+        hit         <= 0;
+        tcam_valid  <= 0;
+        hit_index   <= 0;
+
+    end else begin
+
+        tcam_valid <= 0;
+
+        if (key_valid && !scanning) begin
+            scanning   <= 1;
+            scan_addr  <= 0;
+            hit        <= 0;
+            hit_index  <= 0;
+        end 
+
+        else if (scanning) begin
+
+            if (((key & ~mask_r) == (value_r & ~mask_r)) && !hit) begin
+                hit       <= 1;
+                hit_index <= (scan_addr==0)? 0:(scan_addr-2);//latency
+            end
+
+            scan_addr <= scan_addr + 1;
+
+            if (scan_addr == ENTRIES-1) begin
+                scanning   <= 0;
+                tcam_valid <= 1;   
+            end
+        end
+    end
+end
+
+endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//-----------------------------------------------------------
+
+
+
+
+
+// `define USE_POWER_PINS
+// module tcam_ctrl_pipe #(
+//     parameter KEY_W   = 128,
+//     parameter ENTRIES = 64   // MUST match SRAM
+// )(
+//     inout vccd1,
+//     inout vssd1,
+
+//     input clk,
+//     input rst_n,
+
+//     input [KEY_W-1:0] key,
+//     input key_valid,
+
+//     input wr_en,
+//     input wr_is_mask,
+//     input [$clog2(ENTRIES)-1:0] wr_addr,
+//     input [KEY_W-1:0] wr_data,
+
+//     output reg hit,
+//     output reg [$clog2(ENTRIES)-1:0] hit_index,
+
+//     output reg tcam_valid
+// );
+
+// localparam IDX_W = $clog2(ENTRIES);
+
+// wire [31:0] val_out [0:3];
+// wire [31:0] mask_out [0:3];
+
+// genvar i;
+
+// //value
+// generate
+//     for (i = 0; i < 4; i = i + 1) begin : VALUE_MEM
+
+//         sram22_64x32m4w8 value_mem (
+// `ifdef USE_POWER_PINS
+//             .vdd(vccd1),
+//             .vss(vssd1),
+// `endif
+//             .clk(clk),
+//             .rstb(rst_n),
+//             .ce(1'b1),
+
+//             .we(wr_en && !wr_is_mask),
+//             .wmask(4'b1111),
+
+//             .addr((wr_en ? wr_addr[5:0] : scan_addr[5:0])),
+
+//             .din(wr_data[32*i +: 32]),
+//             .dout(val_out[i])
+//         );
+
+//     end
+// endgenerate
+
+// //mask
+// generate
+//     for (i = 0; i < 4; i = i + 1) begin : MASK_MEM
+
+//         sram22_64x32m4w8 mask_mem (
+// `ifdef USE_POWER_PINS
+//             .vdd(vccd1),
+//             .vss(vssd1),
+// `endif
+//             .clk(clk),
+//             .rstb(rst_n),
+//             .ce(1'b1),
+
+//             .we(wr_en && wr_is_mask),
+//             .wmask(4'b1111),
+
+//             .addr((wr_en ? wr_addr[5:0] : scan_addr[5:0])),
+
+//             .din(wr_data[32*i +: 32]),
+//             .dout(mask_out[i])
+//         );
+
+//     end
+// endgenerate
+
+
+// //read reg
+// reg [127:0] value_r, mask_r;
+
+// always @(posedge clk) begin
+//     value_r <= {val_out[3], val_out[2], val_out[1], val_out[0]};
+//     mask_r  <= {mask_out[3], mask_out[2], mask_out[1], mask_out[0]};
+// end
+
+
+// //scan ctrl
+// reg [IDX_W-1:0] scan_addr;
+// reg scanning;
+
+// always @(posedge clk or negedge rst_n) begin
+//     if (!rst_n) begin
+//         scan_addr   <= 0;
+//         scanning    <= 0;
+//         hit         <= 0;
+//         tcam_valid  <= 0;
+//         hit_index   <= 0;
+
+//     end else begin
+
+//         tcam_valid <= 0;
+
+        
+//         if (wr_en) begin
+//             scanning <= 0;
+//         end
+
+//         else if (key_valid && !scanning) begin
+//             scanning   <= 1;
+//             scan_addr  <= 0;
+//             hit        <= 0;
+//             hit_index  <= 0;
+//         end 
+
+//         else if (scanning) begin
+
+//             if (((key & ~mask_r) == (value_r & ~mask_r)) && !hit) begin
+//                 hit       <= 1;
+//                 hit_index <= scan_addr;
+//             end
+
+//             scan_addr <= scan_addr + 1;
+
+//             if (scan_addr == ENTRIES-1) begin
+//                 scanning   <= 0;
+//                 tcam_valid <= 1;
+//             end
+//         end
+//     end
+// end
+
+// endmodule
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// `define USE_POWER_PINS
+// module tcam_ctrl_pipe #(
+//     parameter KEY_W   = 128,
+//     parameter ENTRIES = 64
+// )(
+//     inout vccd1,
+//     inout vssd1,
+
+//     input clk,
+//     input rst_n,
+
+//     input [KEY_W-1:0] key,
+//     input key_valid,
+
+//     input wr_en,
+//     input wr_is_mask,
+//     input [$clog2(ENTRIES)-1:0] wr_addr,
+//     input [KEY_W-1:0] wr_data,
+
+//     output reg hit,
+//     output reg [$clog2(ENTRIES)-1:0] hit_index,
+
+//     output reg tcam_valid
+// );
+
+// localparam IDX_W = $clog2(ENTRIES);
+
+// wire [31:0] val_out [0:3];
+// wire [31:0] mask_out [0:3];
+
+// genvar i;
+
+// //value
+// generate
+//     for (i = 0; i < 4; i = i + 1) begin : VALUE_MEM
+
+//         sram22_64x32m4w8 value_mem (
+// `ifdef USE_POWER_PINS
+//             .vdd(vccd1),
+//             .vss(vssd1),
+// `endif
+//             .clk(clk),
+//             .rstb(rst_n),
+//             .ce(1'b1),
+
+//             .we(wr_en && !wr_is_mask),
+//             .wmask(4'b1111),
+
+//             .addr((wr_en ? wr_addr : wr_addr)),
+
+//             .din(wr_data[32*i +: 32]),
+//             .dout(val_out[i])
+//         );
+
+//     end
+// endgenerate
+
+// //mask
+// generate
+//     for (i = 0; i < 4; i = i + 1) begin : MASK_MEM
+
+//         sram22_64x32m4w8 mask_mem (
+// `ifdef USE_POWER_PINS
+//             .vdd(vccd1),
+//             .vss(vssd1),
+// `endif
+//             .clk(clk),
+//             .rstb(rst_n),
+//             .ce(1'b1),
+
+//             .we(wr_en && wr_is_mask),
+//             .wmask(4'b1111),
+
+//             .addr((wr_en ? wr_addr : wr_addr)),
+
+//             .din(wr_data[32*i +: 32]),
+//             .dout(mask_out[i])
+//         );
+
+//     end
+// endgenerate
+
+// // reg wr_en_d;
+
+// // always @(posedge clk) begin
+// //     wr_en_d <= wr_en;
+// // end
+
+// // initial begin
+// //     wr_en_d = 0;
+// // end
+
+// // wire wr_en_final = wr_en || wr_en_d;
+
+
+
+
+// // reg [5:0] addr_q;
+
+// // initial begin
+// //     addr_q = 0;
+// // end
+
+// // always @(posedge clk) begin
+// //     if (wr_en)
+// //         addr_q <= wr_addr;
+// // end
+
+
+// //read
+
+// // Stage 1: capture SRAM output
+// reg [127:0] value_r, mask_r;
+
+// always @(posedge clk) begin
+//     value_r <= {val_out[3], val_out[2], val_out[1], val_out[0]};
+//     mask_r  <= {mask_out[3], mask_out[2], mask_out[1], mask_out[0]};
+// end
+
+
+// // delay key and valid to align with SRAM read latency
+
+// // Delay address (align with SRAM read latency)
+// reg [IDX_W-1:0] scan_addr_d;
+
+// // Delay valid (so compare happens with correct data)
+// reg scan_valid;
+
+// always @(posedge clk) begin
+//     scan_addr_d <= scan_addr;
+//     scan_valid  <= scanning;
+// end
+
+
+// // scan fsm
+// reg [IDX_W-1:0] scan_addr;
+// reg scanning;
+
+// always @(posedge clk or negedge rst_n) begin
+//     if (!rst_n) begin
+//         scan_addr   <= 0;
+//         scanning    <= 0;
+//         hit         <= 0;
+//         tcam_valid  <= 0;
+//         hit_index   <= 0;
+
+//     end else begin
+
+//         tcam_valid <= 0;
+
+//         if (wr_en) begin
+//             scanning <= 0;
+//         end
+
+//         else if (key_valid && !scanning) begin
+//             scanning   <= 1;
+//             scan_addr  <= 0;
+//             hit        <= 0;
+//             hit_index  <= 0;
+//         end 
+
+//         else if (scanning) begin
+
+//             // FIXED compare (aligned)
+//             if (scan_valid &&
+//                 ((key & ~mask_r) == (value_r & ~mask_r)) &&
+//                 !hit) begin
+
+//                 hit       <= 1;
+//                 hit_index <= scan_addr_d;
+//             end
+
+//             scan_addr <= scan_addr + 1;
+
+//             if (scan_addr == ENTRIES-1) begin
+//                 scanning   <= 0;
+//                 tcam_valid <= 1;
 //             end
 //         end
 //     end
