@@ -510,9 +510,9 @@ Final Caravel precheck and additional multi-corner optimization are currently in
 
 # System-Level PCB Integration
 
-To demonstrate deployment feasibility beyond standalone ASIC implementation, a system-level PCB integration architecture was developed for NetStream.
+To demonstrate deployment feasibility beyond standalone ASIC implementation, a system-level PCB integration architecture was developed for NetStream. It is being implemented on EasyEDA.
 
-The proposed hardware platform integrates the Caravel-based NetStream ASIC with an external Ethernet PHY and an FPGA-based Ethernet MAC subsystem.
+The proposed hardware platform integrates the Caravel-based NetStream ASIC with an external Ethernet PHY and an FPGA-based Ethernet MAC subsystem. 
 
 The FPGA acts as a lightweight bridge between the Ethernet PHY and the NetStream datapath by:
 
@@ -524,13 +524,13 @@ The NetStream ASIC performs hardware-accelerated packet parsing, classification,
 
 ---
 
-## System-Level Architecture
+## EasyEDA Schematic
 
 ![System-level PCB integration architecture for NetStream](docs/images/pcb_1.jpeg)
 
 The complete system architecture is organized as follows:
 
-
+```text
 RJ45 Connector
        │
        ▼
@@ -543,6 +543,7 @@ FPGA MAC Subsystem
        ▼
 NetStream ASIC
 (Caravel-based)
+```
 
 ---
 
