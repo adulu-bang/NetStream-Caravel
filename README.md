@@ -93,6 +93,7 @@ At a high level, packets enter the system from an external Ethernet PHY through 
 ### Key Architectural Characteristics
 
 - **Throughput and Bandwidth**
+- 
 | Parameter | Value |
 |---|---|
 | Data width | 8 bits (1 byte/cycle) |
@@ -119,6 +120,7 @@ Ethernet PHY ↔ RMII/MII MAC ↔ NetStream ASIC ↔ Host Controller
 
 
 - **Deterministic Latency:**
+
 | Parameter | Value |
 |---|---|
 | Pipeline depth (worst case) | ~246 cycles |
