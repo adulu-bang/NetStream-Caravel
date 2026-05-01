@@ -2,58 +2,68 @@
 
 ## Overview
 
-NetStream is a custom network packet-processing accelerator designed for edge IoT and industrial gateway applications, implemented within the Caravel SoC framework.
+NetStream is a hardware-accelerated network packet-processing engine designed for edge IoT and industrial gateway applications, implemented within the Caravel SoC framework.
 
-Modern edge devices are required to handle increasing volumes of network traffic while operating under strict latency, power, and cost constraints. Software-based packet processing on embedded processors often becomes a bottleneck, limiting real-time responsiveness and scalability in applications such as industrial monitoring, secure edge gateways, and smart infrastructure.
+Modern edge and industrial systems increasingly require real-time network functions such as:
+- Packet filtering  
+- QoS (Quality of Service) enforcement  
+- Traffic classification  
+- Secure flow management  
 
-NetStream addresses this challenge by introducing a dedicated hardware offload engine for packet inspection, parsing, classification and action execution. By shifting these tasks from software to hardware, the system achieves lower latency, higher throughput, and reduced CPU load while maintaining efficiency under constrained power budgets.
+These systems operate under strict:
+- Latency constraints  
+- Power constraints  
+- Cost constraints  
 
-The design is integrated with the Caravel management SoC, enabling programmable control and smooth system-level integration. NetStream is intended to operate as part of a complete edge networking system, interfacing with external Ethernet MAC and PHY components in a system-level deployment.
+In conventional software-based implementations, these tasks are executed on general-purpose CPUs, where packet-processing workloads suffer from irregular memory accesses, poor cache locality, and branch-heavy control flow. As traffic volume and rule complexity increase, software approaches struggle to sustain throughput and deterministic response times, leading to higher latency, increased CPU utilization, and limited scalability.
 
----
+NetStream addresses these limitations by offloading packet parsing, classification, and action execution into a dedicated streaming hardware datapath. The architecture combines programmable TCAM-based rule matching, pipelined packet processing, and hardware action execution to enable low-latency, high-throughput packet handling with reduced CPU involvement.
 
-## Problem Statement
+The design follows a clear separation between control plane and data plane. The Caravel management SoC acts as the programmable control plane responsible for rule configuration and system management, while the NetStream datapath performs real-time packet inspection and processing entirely in hardware.
 
-Edge devices and industrial gateways are increasingly required to perform real-time network functions such as packet filtering, traffic prioritization (QoS (Quality of Service)), and secure flow enforcement. These operations rely on rule-based processing, where each packet must be parsed, classified, and matched against large rule tables.
-
-In conventional software-based implementations, these tasks are executed on general-purpose CPUs. However, packet processing workloads exhibit poor cache locality, irregular memory access patterns, and branch-heavy logic. As a result, frequent cache misses and memory accesses introduce latency, reduce throughput, and limit scalability under high traffic conditions.
-
-These limitations are particularly critical in edge and industrial environments, where systems operate under strict latency, power, and cost constraints. As rule complexity and traffic volume grow, software-based approaches struggle to sustain performance, leading to:
-
-- Reduced throughput for packet inspection and classification  
-- Increased latency in time-sensitive applications  
-- Higher power consumption due to CPU-intensive processing  
-- Limited scalability with growing rule sets  
-
-Existing hardware-accelerated solutions, such as SmartNICs and programmable switches, address some of these challenges but are primarily designed for data center environments. They often involve higher cost, increased power consumption, complex integration, and reliance on specialized toolchains, making them unsuitable for resource-constrained edge systems.
-
-This creates a gap between high-performance networking solutions and the requirements of edge-scale deployments, which demand compact, cost-effective, and tightly integrated architectures capable of delivering deterministic, real-time packet processing.
-
+Unlike traditional hardware-accelerated networking solutions such as SmartNICs and programmable switches, which are typically optimized for data center environments, often involving higher cost, increased power consumption, complex integration, and reliance on specialized toolchains. NetStream targets compact and resource-constrained edge deployments. The system is designed to integrate with external Ethernet MAC and PHY components and operate as part of a complete edge networking platform, providing deterministic packet processing in a cost-effective, power-efficient and scalable architecture.
 
 ---
 
-## Proposed Solution
+## Current Status
 
-NetStream addresses the limitations of software-based packet processing by introducing a hardware-accelerated, streaming datapath integrated within the Caravel user project area.
-
-The design follows a clear separation between control plane and data plane. The Caravel RISC-V management core acts as the control plane, responsible for configuring rules, updating policies, and monitoring system behavior. In contrast, the NetStream datapath operates as a dedicated data plane, performing packet parsing, classification, and action execution entirely in hardware.
-
-Packets are processed through a deterministic, stage-wise pipeline where relevant fields are extracted, lookup keys are generated, and rule-based decisions are made in real time. This enables line-rate operation without relying on large memory accesses or complex software routines.
-
-NetStream specifically offloads the computationally intensive classification stage from the gateway CPU. For example, in QoS scenarios, NetStream modifies packet metadata (e.g., DSCP fields) based on configured policies. The gateway CPU and networking stack then use these standard fields for scheduling and forwarding, without performing expensive rule lookups. This effectively separates packet processing into two stages: classification (expensive) in hardware (NetStream) and scheduling (cheap) in software (CPU).
-
-By shifting classification from a software-driven, memory-bound workflow to a hardware-accelerated pipeline, NetStream reduces CPU load, improves throughput, and ensures deterministic latency, while remaining fully programmable through the Wishbone interface.
-
-
-![System-Level Diagram](docs/images/System_integration_netstream.png)
-
+| Component | Status |
+|---|---|
+| RTL datapath implementation | Completed |
+| DFFRAM macro integration for TCAM and action memories | Completed |
+| Multi-packet dataplane verification | Completed |
+| FPGA validation on Kria KR260 | Completed |
+| OpenLane RTL-to-GDSII flow for dataplane | Completed |
+| Caravel management SoC integration with dataplane | Completed |
+| Verification of register writes from Caravel CPU to TCAM and action memories using Cocotb and custom firmware | Completed |
+| Hardening of `user_project_wrapper` with dataplane macro | Completed |
+| Caravel precheck | In Progress (10/13 PASS) |
+| PCBA Integration | In Progress |
 ---
 
 ## System Architecture
 
-NetStream is designed as a streaming hardware datapath integrated within the Caravel user project area, with a clear separation between the control plane (Caravel management SoC) and the data plane (Custom NetStream pipeline).
+NetStream is a hardware-accelerated streaming packet-processing engine integrated within the Caravel user project area. The architecture follows a clear separation between the control plane and data plane:
 
-At a high level, packets enter the system from an external Ethernet PHY via a MAC interface, which presents packet data as a byte stream along with standard handshake signals (valid, ready, last).
+- The Caravel RISC-V management core acts as the control plane, responsible for:
+  - Rule configuration  
+  - Action memory updates  
+  - Policy management  
+  - System monitoring and debugging  
+
+- The NetStream datapath operates as the data plane, performing:
+  - Packet parsing  
+  - Header extraction  
+  - Packet classification  
+  - Action execution  
+
+Packet processing is fully offloaded to hardware, reducing CPU involvement and enabling deterministic low-latency operation.
+
+At a high level, packets enter the system from an external Ethernet PHY through a MAC interface that presents packet data as a byte stream along with standard handshake signals (`valid`, `ready`, `last`).
+
+![System-Level Diagram](docs/images/System_integration_netstream.png)
+
+---
 
 ### Packet Processing Pipeline
 
@@ -78,54 +88,91 @@ At a high level, packets enter the system from an external Ethernet PHY via a MA
 - **Egress Path**  
    The processed packet is transmitted through the egress interface back to the MAC and subsequently to the external PHY.
 
+---
+
 ### Key Architectural Characteristics
 
 - **Throughput and Bandwidth**
 
-Data width: 8 bits (1 byte per cycle)  
-Clock frequency: 100 MHz  
-Peak throughput: ~800 Mbps  
-This corresponds approximately to Fast Ethernet-class throughput, and is constrained by the current I/O interface width.
+| Parameter | Value |
+|---|---|
+| Data width | 8 bits (1 byte/cycle) |
+| Clock period | 25 ns (Can be decreased upto 14 ns) |
+| Operating frequency | 40 MHz |
+| Peak throughput | ~320 Mbps |
+| Processing style | Fully pipelined |
 
 - **I/O Constraints (Caravel Platform)**
 
-Packet I/O is currently mapped through Caravel user I/O pins  
-Limited number of GPIOs restricts interface width  
+Packet I/O is currently mapped through Caravel user I/O pins   
 Current design uses serialized 8-bit streaming interface  
 As a result, throughput is limited by I/O bandwidth rather than internal pipeline capability.
 
 - **External Interface Assumptions**
 
-Designed to interface with standard Ethernet PHYs (e.g., RMII/MII-compatible MAC)  
-MAC layer assumed to provide byte-stream interface with valid/ready handshake  
-Actual deployment may require external MAC integration due to Caravel I/O limitations  
+NetStream is designed to interface with an external Ethernet MAC and PHY in a PCB-level deployment.
+
+Due to the limited GPIO bandwidth available on the Caravel platform, the ASIC does not directly implement a full Ethernet MAC interface. Instead, NetStream exposes a lightweight streaming datapath interface consisting of:
+- `data[7:0]`
+- `valid`
+- `ready`
+- `last`
+
+An external RMII/MII-compatible lightweight Ethernet MAC is used to connect the Ethernet PHY to the NetStream datapath.
+
+Typical system integration is as follows:
+Ethernet PHY ↔ RMII/MII MAC ↔ NetStream ASIC ↔ Host Controller
+
 
 - **Deterministic Latency:**
 
-Pipeline depth: ~220 cycles (worst-case)  
-At 100 MHz → ~2.2 µs latency  
-Latency is deterministic and independent of packet length due to streaming architecture and early action resolution.
+| Parameter | Value |
+|---|---|
+| Pipeline depth (worst case) | ~246 cycles |
+| Clock period | 25 ns |
+| Operating frequency | 40 MHz |
+| Worst-case latency | ~6.15 µs |
 
-- **Decoupled Data and Control Planes:**
+The latency is deterministic and largely independent of packet length due to the streaming pipeline architecture and early action resolution mechanism.
 
-The datapath operates independently of the control logic, enabling efficient hardware acceleration. The control plane doesn't touch the packets in real-time, all the packet-processing is offloaded to the hardware.
 
-- **Use of SRAM Macros for the TCAM and Action memories***
+- **Custom DFFRAM-Based Memory Architecture**
 
-TCAM and action memories are implemented using SRAM macros, enabling pipelined lookup and improved timing compared to earlier combinational implementations
+The TCAM and action memories were implemented using custom-generated 32×32 DFFRAM macros instead of larger pre-generated SRAM configurations.
+Smaller custom DFFRAM blocks were selected to better match the storage requirements of the dataplane while remaining within the area constraints of the Caravel user project area.
 
-- **Programmable Behavior:**
-Rule tables and actions can be dynamically configured without modifying the hardware pipeline.
+The design currently uses:
+
+- 8 DFFRAM macros for TCAM storage  
+- 4 DFFRAM macros for action memory storage  
+
+This modular memory organization enabled:
+
+- Improved area efficiency  
+- Better floorplanning flexibility  
+- Reduced routing complexity  
+- Easier timing optimization through pipelined lookup stages  
+
+The transition from an earlier combinational lookup architecture to a pipelined DFFRAM-based implementation significantly improved timing performance and enabled successful timing closure under nominal conditions.
 
 ### System Summary
 
 | Parameter | Value |
-|----------|------|
-| Clock frequency | 100 MHz |
-| Data width | 8 bits |
-| Throughput | ~800 Mbps |
-| Latency | ~2.2 µs |
-| Processing style | Fully pipelined |
+|---|---|
+| Control plane | Caravel RISC-V management SoC |
+| Data plane | Fully pipelined NetStream datapath |
+| Processing pipeline depth | ~246 cycles |
+| Data width | 8 bits (1 byte/cycle) |
+| Clock period | 25 ns |
+| Operating frequency | 40 MHz |
+| Peak throughput | ~320 Mbps |
+| Worst-case latency | ~6.15 µs |
+| Packet interface | Streaming byte interface (`data`, `valid`, `ready`, `last`) |
+| External connectivity | RMII/MII-compatible Ethernet MAC + PHY |
+| Memory implementation | Custom 32×32 DFFRAM macros |
+| TCAM memory organization | 8 DFFRAM macros |
+| Action memory organization | 4 DFFRAM macros |
+| Processing style | Fully pipelined streaming architecture |
 
 ---
 
