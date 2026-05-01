@@ -630,7 +630,7 @@ Tapeout and fabrication costs are excluded from the BOM, as fabrication is assum
 
 ### Hardware Components
 
-| Component | Description | Example | Estimated Cost (USD) |
+| Component | Description | Component | Estimated Cost (USD) |
 |---|---|---|---|
 | NetStream ASIC (Caravel-based) | Hardware packet-processing accelerator | MPW fabricated chip | Excluded |
 | Ethernet PHY | Physical-layer Ethernet interface | LAN8720, DP83848 | 2 – 5 |
