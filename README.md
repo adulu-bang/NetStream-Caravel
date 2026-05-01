@@ -226,7 +226,7 @@ Packet Processing and Action Application
 
 ## FPGA Validation
 
-The NetStream datapath was validated on the Xilinx Kria KR260 FPGA platform.
+The NetStream datapath was validated on the Xilinx PYNQ Z2 FPGA platform.
 
 Validation included:
 
