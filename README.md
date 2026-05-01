@@ -532,7 +532,7 @@ The NetStream ASIC performs hardware-accelerated packet parsing, classification,
 
 ## EasyEDA Schematic
 
-![System-level PCB integration architecture for NetStream](docs/images/pcb_2.png)
+![System-level PCB integration architecture for NetStream](pcb/PCBSchematic.png)
 
 The complete system architecture is organized as follows:
 
