@@ -217,6 +217,30 @@ Representative test scenarios included:
 Packet Processing and Action Application
 ![Waveform showing packet rewrite and action synchronization](docs/images/waveform.png)
 
+- **Summary**
+
+| Feature | Description | Status |
+|--------|------------|--------|
+| Packet parsing | Header extraction and metadata generation | PASS |
+| Key generation | Correct key formation from parsed fields | PASS |
+| TCAM matching | Rule lookup and match detection | PASS |
+| Action execution | Forward / drop / modify operations | PASS |
+| Packet buffering | FIFO alignment with action resolution | PASS |
+| Multi-packet pipeline | Multiple packets in-flight | PASS |
+| Backpressure handling | Valid/ready behavior under stalls | PASS |
+| Corner cases | Malformed / edge packets | PASS |
+
+### Example Test Case
+
+- Input: IPv4 packet with destination port = 80  
+- Rule: Match on destination port = 80 → action = modify DSCP  
+- Expected Behavior:
+  - Packet matched in TCAM  
+  - Action selected correctly  
+  - DSCP field modified in output packet  
+
+Observed result matches expected behavior as verified in waveform.
+
 ---
 
 ## FPGA Validation
@@ -259,136 +283,142 @@ The dataplane macro was successfully integrated and hardened within the `user_pr
 ---
 
 
-### Area Constraints and Physical Utilization
 
-The NetStream datapath has been taken through a complete RTL-to-GDSII flow using OpenLane (SKY130), enabling accurate evaluation of area and utilization.
 
-### Post-Layout Area Metrics
 
-- **Die area:** ~8.07 mm²  
-- **Core area:** ~7.98 mm²  
-- **Standard cell area:** ~2.00 mm²  
-- **Macro area (SRAM blocks):** ~0.57 mm²  
-- **Total instance area:** ~2.57 mm²  
+# ASIC Implementation Results (Dataplane Macro)
 
-- **Utilization:**
-  - Target density: 25%  
-  - Achieved utilization: ~32%
- 
-![Block Diagram](docs/images/dtaplane_top_gds_klayout.png)
+The NetStream dataplane was implemented using the OpenLane RTL-to-GDSII flow targeting the SKY130 technology node.
 
-### Observations
+The backend flow included:
 
-- The design comfortably fits within the Caravel user project area constraints.  
+- RTL synthesis with custom DFFRAM macro integration
+- Floorplanning and macro placement  
+- Clock-tree synthesis (CTS)  
+- Global and detailed routing  
+- Static Timing Analysis (STA)  
+- IR-drop and power analysis  
+- DRC/LVS verification  
+- Final GDSII generation  
 
-- The relatively low utilization indicates:
-  - Headroom for further logic expansion or deeper pipelining  
-  - Opportunity to improve timing closure by redistributing logic  
+The dataplane was first hardened as a standalone macro before integration into the Caravel `user_project_wrapper`.
 
-- Presence of SRAM macros (TCAM and action memory) contributes significantly to area realism compared to pure RTL estimates.  
+---
 
-### Physical Design Status
+## Backend Architecture Notes
 
-- Placement and routing completed successfully  
-- Final routed design area is within acceptable limits for Caravel integration  
+The original dataplane used a combinational TCAM implementation, which resulted in significant timing violations and poor scalability.
 
-- Area efficiency can be further improved through:
-  - Density tuning  
-  - Floorplan optimization  
-  - Macro placement refinement  
+To improve timing performance, the TCAM and action memories were redesigned using custom-generated 32×32 DFFRAM macros integrated into a pipelined lookup architecture.
+
+The final dataplane implementation uses:
+
+- 8 DFFRAM macros for TCAM storage  
+- 4 DFFRAM macros for action memory storage  
+
+This transition significantly improved timing performance and enabled successful timing closure at the nominal TT corner.
+
+---
+
+## Physical Design Summary
+
+| Metric | Value |
+|---|---|
+| Technology node | SKY130 |
+| RTL-to-GDSII flow | OpenLane |
+| Die area | ~5.72 mm² |
+| Core area | ~5.64 mm² |
+| Total instance area | ~2.97 mm² |
+| Standard-cell area | ~2.42 mm² |
+| DFFRAM macro area | ~0.55 mm² |
+| Standard-cell utilization | ~47.5% |
+| Total utilization | ~52.6% |
+| Total instances | ~395k |
+| Number of macros | 10 |
+| I/O count | 296 |
+
+---
+
+## Timing Results
+
+Static Timing Analysis (STA) was performed using OpenSTA at the nominal TT corner.
+
+### Timing Summary
+
+| Metric | Value |
+|---|---|
+| Clock period | 25 ns |
+| Operating frequency | 40 MHz |
+| Setup violations | 0 |
+| Hold violations | 0 |
+| Worst setup slack | +3.69 ns |
+| Worst hold slack | +0.20 ns |
+| Setup TNS | 0 |
+| Hold TNS | 0 |
+
+The pipelined DFFRAM-based lookup architecture significantly reduced the critical path compared to the earlier combinational TCAM implementation.
+
+---
+
+## Routing and Physical Verification
+
+Routing was successfully completed with zero final routing DRC violations.
+
+### Routing Summary
+
+| Metric | Value |
+|---|---|
+| Final routing DRC errors | 0 |
+| Total routed nets | ~133k |
+| Total wirelength | ~7.34M |
+| Total vias | ~1.23M |
+
+### Verification Summary
+
+| Check | Status |
+|---|---|
+| KLayout DRC | PASS |
+| LVS | PASS |
+| XOR comparison | PASS |
+| Power-grid violations | 0 |
+| Final routing DRC | PASS |
+
+---
+
+## Power and IR-Drop Analysis
+
+| Metric | Value |
+|---|---|
+| Total power | ~0.15 W |
+| Internal power | ~0.10 W |
+| Switching power | ~0.048 W |
+| Leakage power | ~2.6 µW |
+| Worst IR drop | ~1.07 mV |
+
+IR-drop and power-grid analysis indicate stable power delivery across the dataplane macro under nominal operating conditions.
+
+![Dataplane GDS](docs/images/dataplane_final_gds.png)
+
 
 ---
 
 
 
-## Verification and Backend Plan and Progress
-
-The present version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow end to end through the dataplane. As for the backend, a few iterations of the Openlane flow have been tried on the intial Dataplane RTL, with a few issues still to be resolved.
-
-### RTL Verification
-
-- Functional verification performed using Verilog testbenches 
-- Initial end-to-end validation of the packet-processing pipeline, including:
-  - Header parsing and metadata extraction  
-  - Key generation and rule matching for a limited set of rules  
-  - Action selection and packet forwarding/dropping/rewriting
-  - Basic flow counting functionality  
-
-- Test scenarios include:
-  - Valid packet streams with known rule matches  
-  - No-match conditions and default actions  
-  - Basic handshake behavior using valid/ready signaling  
-
-### Current Status
-
-The current verification covers core functionality and demonstrates correct operation of the pipeline for representative cases. Further work will expand coverage to include:
-- Larger and more complex rule sets  
-- Corner cases and stress conditions  
-- Robust backpressure and boundary scenarios  
-
-### Waveform Validation
-
-Simulation waveforms have been used to verify:
-- Correct propagation of packet data across pipeline stages  
-- Synchronization between packet buffering and action resolution  
-- Timing of control signals (valid, ready, last)  
-
-### Packet Processing and Action Application
 
 
 
-### Gate-Level and Timing Verification
 
-- Gate-Level Simulation (GLS) will be performed after synthesis  
-- Static Timing Analysis (STA) will be conducted using OpenSTA as part of the OpenLane flow
 
-### Backend Verification
 
-- Static Timing Analysis (STA) performed using OpenSTA  
-- Timing closure achieved at nominal (TT) corner  
-- Multi-corner timing verification (SS/FF) in progress  
-- Gate-Level Simulation (GLS) with SDF back-annotation planned  
 
-### Verification Criteria
 
-The following conditions are used to determine correctness:
 
-- Correct extraction of header fields from packet stream  
-- Accurate key generation corresponding to input packet fields  
-- Deterministic TCAM match behavior for programmed rules  
-- Correct action selection and application to packet data  
-- No data loss or corruption across pipeline stages  
-- Proper valid/ready handshake behavior across modules  
 
-### Verification Summary
 
-| Feature | Description | Status |
-|--------|------------|--------|
-| Packet parsing | Header extraction and metadata generation | PASS |
-| Key generation | Correct key formation from parsed fields | PASS |
-| TCAM matching | Rule lookup and match detection | PASS |
-| Action execution | Forward / drop / modify operations | PASS |
-| Packet buffering | FIFO alignment with action resolution | PASS |
-| Multi-packet pipeline | Multiple packets in-flight | PARTIAL (3-packets) |
-| Backpressure handling | Valid/ready behavior under stalls | PASS |
-| Corner cases | Malformed / edge packets | PARTIAL |
 
-### Example Test Case
 
-- Input: IPv4 packet with destination port = 80  
-- Rule: Match on destination port = 80 → action = modify DSCP  
-- Expected Behavior:
-  - Packet matched in TCAM  
-  - Action selected correctly  
-  - DSCP field modified in output packet  
 
-Observed result matches expected behavior as verified in waveform.
 
-### Verification Limitations
-
-- Current verification focuses on functional correctness for representative scenarios  
-- Full coverage of corner cases and stress conditions is ongoing  
-- Long-duration and high-throughput stress testing remains to be completed  
 
 
 ## Deliverables
