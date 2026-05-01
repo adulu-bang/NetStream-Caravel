@@ -44,7 +44,7 @@ Unlike traditional hardware-accelerated networking solutions such as SmartNICs a
 Precheck status:
 
 ![prech1](docs/images/prech1.png)
-![prech_lvs](docs/images/lvs_precheck.png)
+![prech_lvs](docs/images/lvs_prechck.png)
 
 
 ## System Architecture
