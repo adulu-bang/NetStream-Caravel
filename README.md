@@ -41,7 +41,7 @@ Unlike traditional hardware-accelerated networking solutions such as SmartNICs a
 | PCBA Integration | In Progress |
 ---
 
-Precheck status:
+Precheck status: Everything except OEB has passed. There was an issue in GPIO pins and a missing file due to which LVS nd OEB had failed. Now LVS has passed, OEB in progress
 
 ![prech1](docs/images/prech1.png)
 ![prech_lvs](docs/images/lvs_prechk.png)
