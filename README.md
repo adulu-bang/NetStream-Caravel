@@ -37,7 +37,7 @@ Unlike traditional hardware-accelerated networking solutions such as SmartNICs a
 | Caravel management SoC integration with dataplane | Completed |
 | Verification of register writes from Caravel CPU to TCAM and action memories using Cocotb and custom firmware | Completed |
 | Hardening of `user_project_wrapper` with dataplane macro | Completed |
-| Caravel precheck | In Progress (10/13 PASS) |
+| Caravel precheck | In Progress (11/13 PASS) |
 | PCBA Integration | In Progress |
 ---
 
@@ -186,11 +186,6 @@ Configuration and control are performed through memory-mapped Wishbone registers
 
 
 
-
-
-
-
-
 # Verification and Validation
 
 NetStream has been functionally verified across RTL simulation, FPGA deployment, and ASIC implementation stages to validate correct packet-processing behavior, datapath synchronization, and system-level integration.
@@ -262,10 +257,6 @@ The dataplane macro was successfully integrated and hardened within the `user_pr
 
 
 ---
-
-
-
-
 
 
 ### Area Constraints and Physical Utilization
