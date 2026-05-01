@@ -526,7 +526,7 @@ The NetStream ASIC performs hardware-accelerated packet parsing, classification,
 
 ## System-Level Architecture
 
-![System-level PCB integration architecture for NetStream](docs/images/pcb_1.png)
+![System-level PCB integration architecture for NetStream](docs/images/pcb_1.jpeg)
 
 The complete system architecture is organized as follows:
 
