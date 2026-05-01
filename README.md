@@ -37,7 +37,7 @@ Unlike traditional hardware-accelerated networking solutions such as SmartNICs a
 | Caravel management SoC integration with dataplane | Completed |
 | Verification of register writes from Caravel CPU to TCAM and action memories using Cocotb and custom firmware | Completed |
 | Hardening of `user_project_wrapper` with dataplane macro | Completed |
-| Caravel precheck | In Progress (11/13 PASS) |
+| Caravel precheck | In Progress (12/13 PASS) |
 | PCBA Integration | In Progress |
 ---
 
