@@ -492,7 +492,7 @@ Power-grid and IR-drop analysis indicate stable operation under nominal conditio
 ---
 
 
-## Current Status
+## Current Status 
 
 The NetStream dataplane macro has been successfully integrated and hardened within the Caravel `user_project_wrapper`.
 
@@ -507,6 +507,49 @@ Final Caravel precheck and additional multi-corner optimization are currently in
 
 
 ---
+
+# System-Level PCB Integration
+
+To demonstrate deployment feasibility beyond standalone ASIC implementation, a system-level PCB integration architecture was developed for NetStream.
+
+The proposed hardware platform integrates the Caravel-based NetStream ASIC with an external Ethernet PHY and an FPGA-based Ethernet MAC subsystem.
+
+The FPGA acts as a lightweight bridge between the Ethernet PHY and the NetStream datapath by:
+
+- Implementing the Ethernet MAC layer  
+- Handling RMII communication with the PHY  
+- Converting Ethernet frames into the streaming datapath interface required by NetStream  
+
+The NetStream ASIC performs hardware-accelerated packet parsing, classification, and action execution, while the Caravel RISC-V management processor configures TCAM rules and action-memory entries through the Wishbone control interface.
+
+---
+
+## System-Level Architecture
+
+![System-level PCB integration architecture for NetStream](docs/images/pcb_1.png)
+
+The complete system architecture is organized as follows:
+
+
+RJ45 Connector
+       │
+       ▼
+Ethernet PHY (LAN8720)
+       │ RMII
+       ▼
+FPGA MAC Subsystem
+(MAC + Stream Bridge)
+       │ Streaming Interface
+       ▼
+NetStream ASIC
+(Caravel-based)
+
+---
+
+
+
+
+
 
 ## Deliverables
 
