@@ -238,6 +238,8 @@ Validation included:
 
 FPGA testing also helped identify real-time synchronization issues not visible during RTL simulation, leading to improvements in packet buffering and early action-resolution mechanisms.
 
+![FPGA implementation](docs/images/fpg_bd.png)
+
 ---
 
 ## Caravel Integration Verification
