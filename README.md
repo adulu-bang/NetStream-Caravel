@@ -137,15 +137,18 @@ The TCAM and action memories were implemented using custom-generated 32×32 DFFR
 Smaller custom DFFRAM blocks were selected to better match the storage requirements of the dataplane while remaining within the area constraints of the Caravel user project area.
 The design currently uses:
 - 8 DFFRAM macros for TCAM storage  
-- 4 DFFRAM macros for action memory storage  
+- 4 DFFRAM macros for action memory storage
+
 This modular memory organization enabled:
 - Improved area efficiency  
 - Better floorplanning flexibility  
 - Reduced routing complexity  
-- Easier timing optimization through pipelined lookup stages  
+- Easier timing optimization through pipelined lookup stages
+
 The transition from an earlier combinational lookup architecture to a pipelined DFFRAM-based implementation significantly improved timing performance and enabled successful timing closure under nominal conditions.
 
 ---
+
 - **Caravel Integration**
 
 NetStream is implemented within the Caravel user project area and interfaces with the Caravel management SoC through a Wishbone slave interface.
@@ -180,6 +183,99 @@ Configuration and control are performed through memory-mapped Wishbone registers
 ![Block Diagram](docs/images/final_BD_netstream.png)
 
 ---
+
+
+
+
+
+
+
+
+# Verification and Validation
+
+NetStream has been functionally verified across RTL simulation, FPGA deployment, and ASIC implementation stages to validate correct packet-processing behavior, datapath synchronization, and system-level integration.
+
+---
+
+## RTL Verification
+
+Functional verification was performed using custom Verilog testbenches.
+
+The following datapath features were verified:
+
+- Packet parsing and header extraction  
+- Metadata generation and key formation  
+- TCAM-based rule matching  
+- Action selection and packet rewrite operations  
+- Packet forwarding and dropping behavior  
+- Valid-ready handshake functionality  
+- FIFO synchronization across pipeline stages  
+- Multi-packet processing behavior  
+
+Representative test scenarios included:
+
+- Valid packet streams with rule matches  
+- No-match/default-action behavior  
+- Backpressure and stall conditions  
+- Packet rewrite and metadata modification operations
+
+![Waveform showing packet rewrite and action synchronization](docs/images/waveform.png)
+
+---
+
+## FPGA Validation
+
+The NetStream datapath was validated on the Xilinx Kria KR260 FPGA platform.
+
+Validation included:
+
+- Successful synthesis and implementation  
+- Real-time packet processing verification  
+- Streaming datapath validation  
+- Multi-packet pipeline operation  
+- FIFO/action synchronization testing  
+
+FPGA testing also helped identify real-time synchronization issues not visible during RTL simulation, leading to improvements in packet buffering and early action-resolution mechanisms.
+
+---
+
+## Caravel Integration Verification
+
+Integration with the Caravel management SoC was verified using Cocotb and custom firmware running on the Caravel RISC-V processor.
+
+The following features were validated:
+
+- Wishbone communication  
+- Register read/write functionality  
+- TCAM rule programming  
+- Action memory configuration  
+- Control-plane to dataplane interaction  
+
+The dataplane macro was successfully integrated and hardened within the `user_project_wrapper`.
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Area Constraints and Physical Utilization
 
@@ -222,6 +318,7 @@ The NetStream datapath has been taken through a complete RTL-to-GDSII flow using
 ---
 
 
+
 ## Verification and Backend Plan and Progress
 
 The present version of the NetStream datapath has been implemented in Verilog and functionally verified using custom testbenches. This first iteration establishes the core packet-processing pipeline and validates the fundamental data flow end to end through the dataplane. As for the backend, a few iterations of the Openlane flow have been tried on the intial Dataplane RTL, with a few issues still to be resolved.
@@ -256,7 +353,7 @@ Simulation waveforms have been used to verify:
 
 ### Packet Processing and Action Application
 
-![Waveform showing packet rewrite and action synchronization](docs/images/waveform.png)
+
 
 ### Gate-Level and Timing Verification
 
