@@ -41,6 +41,12 @@ Unlike traditional hardware-accelerated networking solutions such as SmartNICs a
 | PCBA Integration | In Progress |
 ---
 
+Precheck status:
+
+![prech1](docs/images/prech1.png)
+![prech_lvs](docs/images/lvs_precheck.png)
+
+
 ## System Architecture
 
 NetStream is a hardware-accelerated streaming packet-processing engine integrated within the Caravel user project area. The architecture follows a clear separation between the control plane and data plane:
