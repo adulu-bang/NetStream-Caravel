@@ -254,6 +254,11 @@ The following features were validated:
 
 The dataplane macro was successfully integrated and hardened within the `user_project_wrapper`.
 
+![CocoTB verification](docs/images/cocotb.jpeg)
+
+![CocoTB verification](docs/images/wav_coco.jpeg)
+
+
 ---
 
 
