@@ -268,23 +268,6 @@ The dataplane macro was successfully integrated and hardened within the `user_pr
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Area Constraints and Physical Utilization
 
 The NetStream datapath has been taken through a complete RTL-to-GDSII flow using OpenLane (SKY130), enabling accurate evaluation of area and utilization.
