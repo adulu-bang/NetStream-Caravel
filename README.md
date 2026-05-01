@@ -32,7 +32,7 @@ Unlike traditional hardware-accelerated networking solutions such as SmartNICs a
 | RTL datapath implementation | Completed |
 | DFFRAM macro integration for TCAM and action memories | Completed |
 | Multi-packet dataplane verification | Completed |
-| FPGA validation on Kria KR260 | Completed |
+| FPGA validation on PYNQ Z2 | Completed |
 | OpenLane RTL-to-GDSII flow for dataplane | Completed |
 | Caravel management SoC integration with dataplane | Completed |
 | Verification of register writes from Caravel CPU to TCAM and action memories using Cocotb and custom firmware | Completed |
@@ -79,7 +79,7 @@ At a high level, packets enter the system from an external Ethernet PHY through 
    The generated key is matched against a programmable rule table (TCAM memory-based rule matching is done) , enabling fast, parallel classification of packets based on pre-defined policies.
 
 - **Action Engine**  
-   Based on the matched rule, an action is selected from an action memory. Eamples of supported actions include forwarding, dropping, tagging, or modifying packet metadata.
+   Based on the matched rule, an action is selected from an action memory. Examples of supported actions include forwarding, dropping, tagging, or modifying packet metadata.
 
 - **Packet Buffering & Action Application**  
    In parallel with header processing, the full packet is being stored in a data FIFO. Once the corresponding action decision is available, the packet stored is forwarded from the FIFO to an action multiplexer which applies the selected operation to the buffered packet.
@@ -114,7 +114,7 @@ An external RMII-compatible lightweight Ethernet MAC is used to connect the Ethe
 
 System integration is as follows:
 
-Ethernet PHY -- RMII MAC -- NetStream ASIC -- RMII MAC -- Ethernet PHY
+Ethernet PHY -- RMII MAC -- NetStream ASIC 
 
 ---
 
@@ -137,7 +137,7 @@ The TCAM and action memories were implemented using custom-generated 32×32 DFFR
 Smaller custom DFFRAM blocks were selected to better match the storage requirements of the dataplane while remaining within the area constraints of the Caravel user project area.
 The design currently uses:
 - 8 DFFRAM macros for TCAM storage  
-- 4 DFFRAM macros for action memory storage
+- 2 DFFRAM macros for action memory storage
 
 This modular memory organization enabled:
 - Improved area efficiency  
@@ -174,7 +174,7 @@ Configuration and control are performed through memory-mapped Wishbone registers
 | External connectivity | RMII/MII-compatible Ethernet MAC + PHY |
 | Memory implementation | Custom 32×32 DFFRAM macros |
 | TCAM memory organization | 8 DFFRAM macros |
-| Action memory organization | 4 DFFRAM macros |
+| Action memory organization | 2 DFFRAM macros |
 | Processing style | Fully pipelined streaming architecture |
 
 ---
@@ -314,7 +314,7 @@ To improve timing performance, the TCAM and action memories were redesigned usin
 The final dataplane implementation uses:
 
 - 8 DFFRAM macros for TCAM storage  
-- 4 DFFRAM macros for action memory storage  
+- 2 DFFRAM macros for action memory storage  
 
 This transition significantly improved timing performance and enabled successful timing closure at the nominal TT corner.
 
@@ -500,7 +500,7 @@ Current progress includes:
 
 - Wrapper-level RTL-to-GDSII completion  
 - Nominal-TT corner timing closure  
-- Klyout DRC/LVS-clean implementation  
+- Klayout DRC/LVS-clean implementation  
 - Wishbone-connected control-plane integration  
 
 Final Caravel precheck and additional multi-corner optimization are currently in progress.
@@ -554,7 +554,7 @@ NetStream ASIC
 
 ## Deliverables
 
-The final submission will provide a complete, reproducible reference design spanning silicon, system integration, and documentation.
+The final submission provides a complete, reproducible reference design spanning silicon, system integration, and documentation.
 
 - **GDSII Layout:**  
   Tapeout-ready layout generated using OpenLane (SKY130)
@@ -565,11 +565,13 @@ The final submission will provide a complete, reproducible reference design span
 - **Verification Suite:**  
   Testbenches for RTL and Gate-Level Simulation (GLS), along with representative waveform results demonstrating pipeline operation  
 
-- **PCBA Design**
+- **PCB schematic and layout files**
+    
+- **FPGA MAC integration framework**
+    
+- **Firmware for TCAM/action programming**  
 
-- **Firmware**  
-
-The project aims to deliver not just a functional chip, but an edge networking system thaat is reproduceable and can be scaled.
+The project aims to deliver not just a functional chip, but an edge networking system that is reproducible and can be scaled.
 
 ---
 
@@ -617,7 +619,7 @@ NetStream can function as a programmable match-action engine for enforcing netwo
 
 - Role: Apply rule-based actions with fixed latency  
 - Problem: Software systems introduce variability in processing time  
-- Benefit: Predictable latency (~2.2 µs) enables time-sensitive applications  
+- Benefit: Predictable latency (~6.15 µs worst case) enables time-sensitive applications  
 
 
 ## System Feasibility and Bill of Materials (BOM)
@@ -685,6 +687,3 @@ Adhitya Santhanam
 
 ---
 
-##  Repository Structure
-
-(Will follow Caravel user project template)
