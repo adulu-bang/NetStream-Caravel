@@ -90,10 +90,10 @@ At a high level, packets enter the system from an external Ethernet PHY through 
 
 ---
 
+
 ### Key Architectural Characteristics
 
 - **Throughput and Bandwidth**
-
 | Parameter | Value |
 |---|---|
 | Data width | 8 bits (1 byte/cycle) |
@@ -103,56 +103,43 @@ At a high level, packets enter the system from an external Ethernet PHY through 
 | Processing style | Fully pipelined |
 
 - **I/O Constraints (Caravel Platform)**
-
-Packet I/O is currently mapped through Caravel user I/O pins   
+Packet I/O is mapped through Caravel user I/O pins   
 Current design uses serialized 8-bit streaming interface  
 As a result, throughput is limited by I/O bandwidth rather than internal pipeline capability.
 
 - **External Interface Assumptions**
-
-NetStream is designed to interface with an external Ethernet MAC and PHY in a PCB-level deployment.
-
+NetStream interfaces with an external Ethernet MAC and PHY in a PCB-level deployment.
 Due to the limited GPIO bandwidth available on the Caravel platform, the ASIC does not directly implement a full Ethernet MAC interface. Instead, NetStream exposes a lightweight streaming datapath interface consisting of:
 - `data[7:0]`
 - `valid`
 - `ready`
 - `last`
-
 An external RMII/MII-compatible lightweight Ethernet MAC is used to connect the Ethernet PHY to the NetStream datapath.
-
-Typical system integration is as follows:
+System integration is as follows:
 Ethernet PHY ↔ RMII/MII MAC ↔ NetStream ASIC ↔ Host Controller
 
 
 - **Deterministic Latency:**
-
 | Parameter | Value |
 |---|---|
 | Pipeline depth (worst case) | ~246 cycles |
 | Clock period | 25 ns |
 | Operating frequency | 40 MHz |
 | Worst-case latency | ~6.15 µs |
-
 The latency is deterministic and largely independent of packet length due to the streaming pipeline architecture and early action resolution mechanism.
 
 
 - **Custom DFFRAM-Based Memory Architecture**
-
 The TCAM and action memories were implemented using custom-generated 32×32 DFFRAM macros instead of larger pre-generated SRAM configurations.
 Smaller custom DFFRAM blocks were selected to better match the storage requirements of the dataplane while remaining within the area constraints of the Caravel user project area.
-
 The design currently uses:
-
 - 8 DFFRAM macros for TCAM storage  
 - 4 DFFRAM macros for action memory storage  
-
 This modular memory organization enabled:
-
 - Improved area efficiency  
 - Better floorplanning flexibility  
 - Reduced routing complexity  
 - Easier timing optimization through pipelined lookup stages  
-
 The transition from an earlier combinational lookup architecture to a pipelined DFFRAM-based implementation significantly improved timing performance and enabled successful timing closure under nominal conditions.
 
 ### System Summary
