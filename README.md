@@ -197,9 +197,9 @@ NetStream has been functionally verified across RTL simulation, FPGA deployment,
 
 ---
 
-## RTL Verification
+## RTL Verification 
 
-Functional verification was performed using custom Verilog testbenches.
+Functional verification was performed using custom Verilog testbenches. We have achieved a good coverage across most edge cases and continuous packet loads.
 
 The following datapath features were verified:
 
@@ -219,6 +219,7 @@ Representative test scenarios included:
 - Backpressure and stall conditions  
 - Packet rewrite and metadata modification operations
 
+Packet Processing and Action Application
 ![Waveform showing packet rewrite and action synchronization](docs/images/waveform.png)
 
 ---
