@@ -106,10 +106,14 @@ At a high level, packets enter the system from an external Ethernet PHY through 
 - **I/O Constraints and External Interface Assumptions**
 
 Packet I/O is mapped through Caravel user I/O pins. Current design uses serialized 8-bit streaming interface. NetStream interfaces with an external Ethernet MAC and PHY in a PCB-level deployment.
-Due to the limited GPIO bandwidth available on the Caravel platform, the ASIC does not directly implement a full Ethernet MAC interface. Instead, NetStream exposes a lightweight streaming datapath interface consisting of `data`, `valid`, `ready`, `last` signals.
+
+Due to the limited GPIO bandwidth available on the Caravel platform, the ASIC does not directly implement a full Ethernet MAC interface. 
+Instead, NetStream exposes a lightweight streaming datapath interface consisting of `data`, `valid`, `ready`, `last` signals.
+
 An external RMII-compatible lightweight Ethernet MAC is used to connect the Ethernet PHY to the NetStream datapath.
 
 System integration is as follows:
+
 Ethernet PHY -- RMII MAC -- NetStream ASIC -- RMII MAC -- Ethernet PHY
 
 ---
