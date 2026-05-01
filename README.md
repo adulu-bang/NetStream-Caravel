@@ -622,36 +622,33 @@ NetStream can function as a programmable match-action engine for enforcing netwo
 
 ## System Feasibility and Bill of Materials (BOM)
 
-NetStream is designed as a hardware accelerator within an edge networking system.  
-**Tapeout and fabrication costs are excluded**, as they are covered separately (e.g., MPW programs) and do not reflect deployment cost.
+NetStream is designed as a deployable hardware accelerator for edge-networking and industrial-IoT systems.
+
+Tapeout and fabrication costs are excluded from the BOM, as fabrication is assumed to be performed through shared MPW programs and does not reflect the deployment cost of the system itself.
+
+---
 
 ### Hardware Components
 
-| Component | Description | Example | Cost (USD) |
-|----------|------------|--------|-----------|
-| NetStream ASIC (Caravel-based) | Packet processing accelerator | Fabricated chip (MPW) | Excluded |
-| Ethernet PHY | Physical layer interface | LAN8720, DP83848 | 2 – 5 |
-| Ethernet MAC | Frame interface (MII/RMII/GMII) | External MAC / soft MAC | 0 – 5 |
-| Host Controller | Control plane + configuration | STM32 / RP2040 / Raspberry Pi | 3 – 15 |
-| Power + PCB | Regulators, connectors, board | — | 8 – 20 |
+| Component | Description | Example | Estimated Cost (USD) |
+|---|---|---|---|
+| NetStream ASIC (Caravel-based) | Hardware packet-processing accelerator | MPW fabricated chip | Excluded |
+| Ethernet PHY | Physical-layer Ethernet interface | LAN8720, DP83848 | 2 – 5 |
+| FPGA (MAC subsystem) | Ethernet MAC + stream bridge | Lattice iCE40 / ECP5 | 8 – 20 |
+| FPGA Configuration Flash | FPGA boot configuration storage | W25Q128 | 1 – 3 |
+| RJ45 + Magnetics | Ethernet connector interface | Integrated MagJack | 2 – 6 |
+| Power Management | Regulators and filtering circuitry | LDO/DC-DC modules | 3 – 8 |
+| Oscillator and Clocking | System and RMII clock generation | 25/50 MHz oscillator | 1 – 3 |
+| PCB and Passive Components | PCB fabrication and passives | 4-layer PCB | 10 – 25 |
 
 ---
 
 ### Estimated System Cost (Excluding ASIC Fabrication)
 
-- **Low-cost configuration (MCU-based):** ~$15 – $30  
-- **Enhanced configuration (Linux-capable host):** ~$25 – $45  
-
----
-
-### Notes on Cost Assumptions
-
-- Ethernet PHY pricing is based on commonly available 10/100 Mbps parts in low-volume quantities  
-- Ethernet MAC functionality may be:
-  - Integrated within the host (common in MCUs/SoCs), or  
-  - Implemented as a lightweight external/FPGA soft MAC  
-- Host controller cost varies depending on required software stack (bare-metal vs Linux)  
-- PCB cost assumes simple 2–4 layer board typical for edge devices  
+| Configuration | Estimated Cost (USD) |
+|---|---|
+| Minimal prototype platform | ~25 – 45 |
+| FPGA-enhanced development platform | ~40 – 70 |
 
 ---
 
