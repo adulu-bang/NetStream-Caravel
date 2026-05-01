@@ -305,7 +305,7 @@ The dataplane was first hardened as a standalone macro before integration into t
 
 ---
 
-## Backend Architecture Notes
+## Backend Architecture 
 
 The original dataplane used a combinational TCAM implementation, which resulted in significant timing violations and poor scalability.
 
@@ -402,24 +402,111 @@ IR-drop and power-grid analysis indicate stable power delivery across the datapl
 
 ---
 
+# Caravel User Project Wrapper Hardening
+
+After standalone hardening of the NetStream dataplane macro, the design was integrated into the Caravel `user_project_wrapper` to validate compatibility with the Caravel management SoC and full chip-level integration flow.
+
+The hardened dataplane macro was instantiated within the Caravel user project area and connected through:
+
+- Wishbone control interface  
+- Caravel clock and reset infrastructure  
+- User I/O interfaces  
+- Power-grid integration  
+
+The wrapper-level implementation was then taken through the OpenLane RTL-to-GDSII flow to validate chip-level integration, timing behavior, routing feasibility, and physical verification compatibility.
+
+---
+
+## Wrapper-Level Integration Summary
+
+| Metric | Value |
+|---|---|
+| Technology node | SKY130 |
+| RTL-to-GDSII flow | OpenLane |
+| Die area | ~10.28 mm² |
+| Core area | ~10.17 mm² |
+| Integrated macros | 1 (NetStream dataplane macro) |
+| Macro area | ~5.72 mm² |
+| Wrapper I/O count | 645 |
+| Total utilization | ~57.1% |
+
+---
+
+## Timing Results
+
+Static Timing Analysis (STA) was performed at the nominal TT corner after wrapper-level integration.
+
+### Timing Summary
+
+| Metric | Value |
+|---|---|
+| Clock period | 25 ns |
+| Operating frequency | 40 MHz |
+| Setup violations | 0 |
+| Hold violations | 0 |
+| Worst setup slack | +5.96 ns |
+| Worst hold slack | +0.11 ns |
+| Setup TNS | 0 |
+| Hold TNS | 0 |
+
+The integrated wrapper successfully achieved nominal-corner timing closure without setup or hold violations.
+
+---
+
+## Routing and Physical Verification
+
+Routing and physical verification were completed successfully for the integrated wrapper design.
+
+### Physical Verification Summary
+
+| Check | Status |
+|---|---|
+| Final routing DRC | PASS |
+| KLayout DRC | PASS |
+| LVS | PASS |
+| XOR comparison | PASS |
+| Power-grid violations | 0 |
+
+### Routing Summary
+
+| Metric | Value |
+|---|---|
+| Final routing DRC errors | 0 |
+| Total routed nets | ~1.8k |
+| Total wirelength | ~258k |
+| Total vias | ~8k |
+
+---
+
+## Power and IR-Drop Analysis
+
+| Metric | Value |
+|---|---|
+| Total power | ~1.12 mW |
+| Worst IR drop | ~0.8 mV |
+
+Power-grid and IR-drop analysis indicate stable operation under nominal conditions after full wrapper-level integration.
+
+![user_proj GDS](docs/images/user_prj_gds.png)
+
+---
 
 
+## Current Status
+
+The NetStream dataplane macro has been successfully integrated and hardened within the Caravel `user_project_wrapper`.
+
+Current progress includes:
+
+- Wrapper-level RTL-to-GDSII completion  
+- Nominal-TT corner timing closure  
+- Klyout DRC/LVS-clean implementation  
+- Wishbone-connected control-plane integration  
+
+Final Caravel precheck and additional multi-corner optimization are currently in progress.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+---
 
 ## Deliverables
 
