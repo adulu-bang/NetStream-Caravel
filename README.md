@@ -58,7 +58,6 @@ NetStream is a hardware-accelerated streaming packet-processing engine integrate
   - Action execution  
 
 Packet processing is fully offloaded to hardware, reducing CPU involvement and enabling deterministic low-latency operation.
-
 At a high level, packets enter the system from an external Ethernet PHY through a MAC interface that presents packet data as a byte stream along with standard handshake signals (`valid`, `ready`, `last`).
 
 ![System-Level Diagram](docs/images/System_integration_netstream.png)
