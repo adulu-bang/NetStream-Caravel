@@ -89,11 +89,10 @@ At a high level, packets enter the system from an external Ethernet PHY through 
 
 ---
 
-
 ### Key Architectural Characteristics
 
 - **Throughput and Bandwidth**
-- 
+
 | Parameter | Value |
 |---|---|
 | Data width | 8 bits (1 byte/cycle) |
@@ -102,22 +101,19 @@ At a high level, packets enter the system from an external Ethernet PHY through 
 | Peak throughput | ~320 Mbps |
 | Processing style | Fully pipelined |
 
-- **I/O Constraints (Caravel Platform)**
-Packet I/O is mapped through Caravel user I/O pins   
-Current design uses serialized 8-bit streaming interface  
-As a result, throughput is limited by I/O bandwidth rather than internal pipeline capability.
+---
 
-- **External Interface Assumptions**
+- **I/O Constraints and External Interface Assumptions**
+
+Packet I/O is mapped through Caravel user I/O pins.
+Current design uses serialized 8-bit streaming interface.
 NetStream interfaces with an external Ethernet MAC and PHY in a PCB-level deployment.
-Due to the limited GPIO bandwidth available on the Caravel platform, the ASIC does not directly implement a full Ethernet MAC interface. Instead, NetStream exposes a lightweight streaming datapath interface consisting of:
-- `data[7:0]`
-- `valid`
-- `ready`
-- `last`
-An external RMII/MII-compatible lightweight Ethernet MAC is used to connect the Ethernet PHY to the NetStream datapath.
+Due to the limited GPIO bandwidth available on the Caravel platform, the ASIC does not directly implement a full Ethernet MAC interface. Instead, NetStream exposes a lightweight streaming datapath interface consisting of `data`, `valid`, `ready`, `last` signals.
+An external RMII-compatible lightweight Ethernet MAC is used to connect the Ethernet PHY to the NetStream datapath.
 System integration is as follows:
-Ethernet PHY ↔ RMII/MII MAC ↔ NetStream ASIC ↔ Host Controller
+Ethernet PHY -- RMII MAC -- NetStream ASIC -- RMII MAC -- Ethernet PHY
 
+---
 
 - **Deterministic Latency:**
 
@@ -129,8 +125,10 @@ Ethernet PHY ↔ RMII/MII MAC ↔ NetStream ASIC ↔ Host Controller
 | Worst-case latency | ~6.15 µs |
 The latency is deterministic and largely independent of packet length due to the streaming pipeline architecture and early action resolution mechanism.
 
+---
 
 - **Custom DFFRAM-Based Memory Architecture**
+
 The TCAM and action memories were implemented using custom-generated 32×32 DFFRAM macros instead of larger pre-generated SRAM configurations.
 Smaller custom DFFRAM blocks were selected to better match the storage requirements of the dataplane while remaining within the area constraints of the Caravel user project area.
 The design currently uses:
@@ -142,6 +140,16 @@ This modular memory organization enabled:
 - Reduced routing complexity  
 - Easier timing optimization through pipelined lookup stages  
 The transition from an earlier combinational lookup architecture to a pipelined DFFRAM-based implementation significantly improved timing performance and enabled successful timing closure under nominal conditions.
+
+---
+- **Caravel Integration**
+
+NetStream is implemented within the Caravel user project area and interfaces with the Caravel management SoC through a Wishbone slave interface.
+The Caravel RISC-V management core acts as the control plane and is responsible for:
+- Configuring TCAM rule tables  
+- Updating action memory entries  
+- System monitoring and debugging  
+Configuration and control are performed through memory-mapped Wishbone registers exposed by the NetStream datapath.
 
 ### System Summary
 
@@ -163,31 +171,6 @@ The transition from an earlier combinational lookup architecture to a pipelined 
 | Processing style | Fully pipelined streaming architecture |
 
 ---
-
-### Integration with Caravel
-
-NetStream is implemented within the Caravel user project area and interfaces with the Caravel management SoC through the Wishbone bus.
-
-- **Control Plane Integration**
-
-The Caravel management SoC, which includes a RISC-V processor, serves as the control plane for NetStream. It is responsible for:
-
-Configuring TCAM rule tables for packet classification  
-Updating action memory entries  
-Monitoring flow statistics
-Managing system-level control and debugging  
-
-All configuration and control operations are performed via memory-mapped registers exposed through a Wishbone slave interface implemented in the NetStream design.
-
-- **I/O Integration**
-
-Packet I/O is interfaced through GPIO or dedicated user I/O pins connected to an external Ethernet MAC/PHY.  
-The design is integrated into the `user_project_wrapper`, adhering to Caravel’s standard interface requirements.
-
-- **System-Level Role**
-
-Within the overall system, Caravel provides programmability and system control, while NetStream functions as a dedicated hardware accelerator for packet processing. This separation enables efficient and scalable edge networking solutions.
-
 
 ## Block Diagram Of Architecture
 ![Block Diagram](docs/images/final_BD_netstream.png)
