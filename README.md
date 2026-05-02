@@ -37,14 +37,13 @@ Unlike traditional hardware-accelerated networking solutions such as SmartNICs a
 | Caravel management SoC integration with dataplane | Completed |
 | Verification of register writes from Caravel CPU to TCAM and action memories using Cocotb and custom firmware | Completed |
 | Hardening of `user_project_wrapper` with dataplane macro | Completed |
-| Caravel precheck | In Progress (12/13 PASS) |
+| Caravel precheck | Completed (13/13 PASS) |
 | PCBA Integration | In Progress |
 ---
 
-Precheck status: Everything except OEB has passed. There was an issue in GPIO pins and a missing file due to which LVS nd OEB had failed. Now LVS has passed, OEB in progress
+Precheck status: All precheck steps has been passed :)
 
-![prech1](docs/images/prech1.png)
-![prech_lvs](docs/images/lvs_prechk.png)
+![prech](docs/images/prechk.jpeg)
 
 
 ## System Architecture
