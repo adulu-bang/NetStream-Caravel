@@ -1,23 +1,25 @@
 {
   "project": {
-    "name": "NetStream-Caravel",
+    "name": "NetStream1",
     "type": "digital",
-    "user": "--",
-    "version": "1",
-    "user_project_wrapper_hash": "",
+    "user": "adhitya-santhanam",
+    "version": "2",
+    "user_project_wrapper_hash": "043e84c9c50e1a1f789fcf31ce604e7806c58d7f0a7268940570e9bad8efc5d1",
     "submission_state": "Draft",
+    "github_repo_url": "https://github.com/adulu-bang/NetStream-Caravel",
+    "platform_project_id": "3332a85b-3103-463d-82b5-2228b2ff00bd",
     "gpio_config": {
-      "5": "13'h1808",
-      "6": "13'h1808",
-      "7": "13'h1808",
-      "8": "13'h1808",
-      "9": "13'h1808",
-      "10": "13'h1808",
-      "11": "13'h1808",
-      "12": "13'h1808",
-      "13": "13'h1808",
-      "14": "13'h1808",
-      "15": "13'h1808",
+      "5": "13'h0402",
+      "6": "13'h0402",
+      "7": "13'h0402",
+      "8": "13'h0402",
+      "9": "13'h0402",
+      "10": "13'h0402",
+      "11": "13'h0402",
+      "12": "13'h0402",
+      "13": "13'h0402",
+      "14": "13'h0402",
+      "15": "13'h0402",
       "16": "13'h1808",
       "17": "13'h1808",
       "18": "13'h1808",
@@ -29,82 +31,723 @@
       "24": "13'h1808",
       "25": "13'h1808",
       "26": "13'h1808",
-      "27": "13'h1808",
-      "28": "13'h1808",
-      "29": "13'h1808",
-      "30": "13'h1808",
-      "31": "13'h1808",
-      "32": "13'h1808",
-      "33": "13'h1808",
-      "34": "13'h1808",
-      "35": "13'h1808",
-      "36": "13'h1808",
-      "37": "13'h1808"
+      "27": "13'h0402",
+      "28": "13'h0402",
+      "29": "13'h0402",
+      "30": "13'h0402",
+      "31": "13'h0402",
+      "32": "13'h0402",
+      "33": "13'h0402",
+      "34": "13'h0402",
+      "35": "13'h0402",
+      "36": "13'h0402",
+      "37": "13'h0402"
     }
   },
   "precheck": {
-    "version": "1.0.2",
-    "timestamp": "2026-03-20T10:18:04.426803+00:00",
+    "version": "1.3.1",
+    "timestamp": "2026-05-02T07:20:03.576350+00:00",
     "pdk": "sky130A",
     "passed": true,
     "checks": {
       "topcell_check": {
         "status": "pass",
-        "duration_s": 1.22
+        "duration_s": 9.96
       },
       "gpio_defines": {
         "status": "pass",
-        "duration_s": 1.13
+        "duration_s": 1.45
       },
       "xor": {
         "status": "pass",
-        "duration_s": 14.84
+        "duration_s": 366.27
       },
       "klayout_feol": {
         "status": "pass",
-        "duration_s": 296.11
+        "duration_s": 1303.85
       },
       "klayout_beol": {
         "status": "pass",
-        "duration_s": 1069.31
+        "duration_s": 3139.03
       },
       "klayout_offgrid": {
         "status": "pass",
-        "duration_s": 145.47
+        "duration_s": 646.91
       },
       "klayout_met_min_ca_density": {
         "status": "pass",
-        "duration_s": 42.38
+        "duration_s": 252.29
       },
       "klayout_pin_label_purposes_overlapping_drawing": {
         "status": "pass",
-        "duration_s": 27.83
+        "duration_s": 162.81
       },
       "klayout_zeroarea": {
         "status": "pass",
-        "duration_s": 8.21
+        "duration_s": 50.22
       },
       "spike_check": {
         "status": "pass",
-        "duration_s": 5.69
+        "duration_s": 44.55
       },
       "illegal_cellname_check": {
         "status": "pass",
-        "duration_s": 1.75
-      },
-      "oeb": {
-        "status": "pass",
-        "duration_s": 614.1
+        "duration_s": 9.72
       },
       "lvs": {
         "status": "pass",
-        "duration_s": 1493.29
+        "duration_s": 15839.23
+      },
+      "oeb": {
+        "status": "pass",
+        "duration_s": 51.93,
+        "details": "0 errors, 11 warnings across 38 GPIOs",
+        "report": {
+          "report_relpath": "/home/elabuser0/Silicon_to_systems/Netstream_final_gpio/NetStream_final_gpio/precheck_results/02_MAY_2026___01_15_12/outputs/reports/cvc.oeb.report",
+          "design_type": "caravel",
+          "gpios": [
+            {
+              "gpio": 0,
+              "user_index": 0,
+              "analog_index": null,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "FIXED_STD_INPUT_NOPULL",
+              "resolved_mode": "FIXED_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 1,
+              "user_index": 1,
+              "analog_index": null,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "FIXED_STD_INPUT_NOPULL",
+              "resolved_mode": "FIXED_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 2,
+              "user_index": 2,
+              "analog_index": null,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "FIXED_STD_INPUT_NOPULL",
+              "resolved_mode": "FIXED_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 3,
+              "user_index": 3,
+              "analog_index": null,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "FIXED_STD_INPUT_PULLUP",
+              "resolved_mode": "FIXED_STD_INPUT_PULLUP",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 4,
+              "user_index": 4,
+              "analog_index": null,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "FIXED_STD_INPUT_NOPULL",
+              "resolved_mode": "FIXED_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 5,
+              "user_index": 5,
+              "analog_index": null,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 6,
+              "user_index": 6,
+              "analog_index": null,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 7,
+              "user_index": 7,
+              "analog_index": 0,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 8,
+              "user_index": 8,
+              "analog_index": 1,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 9,
+              "user_index": 9,
+              "analog_index": 2,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 10,
+              "user_index": 10,
+              "analog_index": 3,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 11,
+              "user_index": 11,
+              "analog_index": 4,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 12,
+              "user_index": 12,
+              "analog_index": 5,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 13,
+              "user_index": 13,
+              "analog_index": 6,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 14,
+              "user_index": 14,
+              "analog_index": 7,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 15,
+              "user_index": 15,
+              "analog_index": 8,
+              "in": 4,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 16,
+              "user_index": 16,
+              "analog_index": 9,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 17,
+              "user_index": 17,
+              "analog_index": 10,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 18,
+              "user_index": 18,
+              "analog_index": 11,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 19,
+              "user_index": 19,
+              "analog_index": 12,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 20,
+              "user_index": 20,
+              "analog_index": 13,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 21,
+              "user_index": 21,
+              "analog_index": 14,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 22,
+              "user_index": 22,
+              "analog_index": 15,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 23,
+              "user_index": 23,
+              "analog_index": 16,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 24,
+              "user_index": 24,
+              "analog_index": 17,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 25,
+              "user_index": 25,
+              "analog_index": 18,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 26,
+              "user_index": 26,
+              "analog_index": 19,
+              "in": null,
+              "out": "2",
+              "analog": null,
+              "oeb_min": "vssd*",
+              "oeb_sim": "vssd*",
+              "oeb_max": "vssd*",
+              "configuration": "USER_STD_OUTPUT",
+              "resolved_mode": "USER_STD_OUTPUT",
+              "warning_count": 0,
+              "error_count": 0
+            },
+            {
+              "gpio": 27,
+              "user_index": 27,
+              "analog_index": 20,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 28,
+              "user_index": 28,
+              "analog_index": 21,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 29,
+              "user_index": 29,
+              "analog_index": 22,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 30,
+              "user_index": 30,
+              "analog_index": 23,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 31,
+              "user_index": 31,
+              "analog_index": 24,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 32,
+              "user_index": 32,
+              "analog_index": 25,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 33,
+              "user_index": 33,
+              "analog_index": 26,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 34,
+              "user_index": 34,
+              "analog_index": 27,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 35,
+              "user_index": 35,
+              "analog_index": 28,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 36,
+              "user_index": 36,
+              "analog_index": null,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            },
+            {
+              "gpio": 37,
+              "user_index": 37,
+              "analog_index": null,
+              "in": null,
+              "out": "vssd*",
+              "analog": null,
+              "oeb_min": "vccd*",
+              "oeb_sim": "vccd*",
+              "oeb_max": "vccd*",
+              "configuration": "USER_STD_INPUT_NOPULL",
+              "resolved_mode": "USER_STD_INPUT_NOPULL",
+              "warning_count": 1,
+              "error_count": 0
+            }
+          ],
+          "messages": [
+            {
+              "gpio": 27,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 28,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 29,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 30,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 31,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 32,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 33,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 34,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 35,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 36,
+              "severity": "warning",
+              "text": "missing user input connection"
+            },
+            {
+              "gpio": 37,
+              "severity": "warning",
+              "text": "missing user input connection"
+            }
+          ],
+          "summary": {
+            "total": 38,
+            "errors": 0,
+            "warnings": 11,
+            "no_issues_banner": false
+          }
+        }
       },
       "magic_drc": {
         "status": "skip",
         "duration_s": 0,
         "reason": "optional (use --magic-drc to include)"
       }
-    }
+    },
+    "input_file_hash": "c7b420072e4474c1ad8384fb009c93880d29d39b"
   }
 }
