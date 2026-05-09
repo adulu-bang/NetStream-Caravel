@@ -16,18 +16,53 @@
 # SPDX-License-Identifier: Apache-2.0
 -->
 
-# Table of Contents
-* [Quick Start](./README.md#quick-start)
-* [For advanced users](./README.md#for-advanced-users)
-	* [Simulation Environment Setup](./README.md#simulation-environment-setup)
-		* [Docker](./README.md#1-docker)
-	* [Running Simulation](./README.md#running-simulation)
-	*  [User Project Example DV](./README.md#user-project-example-dv)
-		*  [IO Ports Test](./README.md#io-ports-test)
-		*  [Logic Analyzer Test 1](./README.md#logic-analyzer-test-1)
-		*  [Logic Analyzer Test 2](./README.md#logic-analyzer-test-2)
-		*  [MPRJ Stimulus](./README.md#mprj_stimulus)
-		*  [Wishbone Test](./README.md#wishbone-test)
+# NetStream Dataplane Block-Level Verification Report
+
+This document desctribes the functional, block-level verification of the NetStream Dataplane pipeline. Before connecting the datapath to the Caravel Management SoC and the Wishbone bus, we isolated the core networking logic and tested it using a custom Verilog testbench (`tb_final.v`). 
+
+The sections below track how test packets flow through the Dataplane pipeline, and supporting waveform screenshots.
+
+---
+
+## Data Input and Split Buffering (`mac_rx_fifo_final`, `packet_fifo_upper`, & `header_buffer_pipe_fifo`)
+
+**Objective:** Check that incoming Ethernet packets are received smoothly and split into two paths, one for the payload and one for the headers without dropping data or slowing down.
+
+**Architecture Summary:**
+Incoming network traffic arrives at the `rx` interface. Here, the design splits into two paths:
+* **The Payload Path:** The raw packet bytes go into `packet_fifo_upper`. This is a  buffer that holds the packet data while the downstream TCAM makes a decision.
+* **The Header Path:** At the same time, the data goes into a smaller temporary buffer (`mac_rx_fifo_final`) which passes it to the `header_buffer_pipe_fifo`. This module extracts the header of the packet.
+
+If a packet finishes before hitting the 192-byte limit, the Header Buffer immediately sends a `hdr_valid` signal to activate the Parser instead of waiting to fill up.
+
+**Waveform Verification:**
+![Data Input and Split Buffering](../../docs/images/input_buffering.png)
+
+**Analysis:**
+The waveform shows the MAC interface accepting the bytes without pausing (`rx_ready` stays high ). 
+	-  **Payload Buffer:** The `count` variable goes up to 70 (Hex `046`), proving the `packet_fifo_upper` successfully caught all the payload bytes.
+	- **Header Extraction:** At that moment, the Header Buffer collects the header data. The write pointer (`wr_ptr`) hits 70 as the packet ends. It immediately asserts the `hdr_valid` signal to pass the `hdr_flat` data to the Parser. 
+
+## Control Plane & Firmware Verification
+
+- Control verification performed using Cocotb testbenches executing compiled C firmware
+
+- Validation of the Wishbone interface handshake, including:
+
+  - Correct data latching during write transactions
+  - Accurate acknowledge generation adhering to Caravel bus latency requirements
+  - Proper address decoding for TCAM and Action memory blocks
+  
+![Cocotb Log](../../docs/images/firmware_cocotb.jpeg)
+![Cocotb Log](../../docs/images/firmware_cocotb_log.jpeg)
+
+- Validation of firmware-driven configuration, including:
+
+  - Successful programming of rules into the SRAM macros via firmware
+  - Verification of memory integrity using Cocotb backdoor memory inspection
+  - End-to-end integration testing using dynamically loaded rules via the Wishbone bus
+
+![Wishbone Waveform](../../docs/images/wishbone_waveform.jpeg)
 
 # Quick Launch for Designers
 
@@ -267,7 +302,4 @@ The directory includes five tests for the counter user-project example:
 	reg_mprj_datal = (testval << 16);
 	```
 
-	
-### Wishbone Test
 
-* This test is meant to verify that we can read and write to the count register through the wishbone port. The firmware writes a value of `0x2710` to the count register, then reads back the count value after some time. The read and write transactions happen through the management SoC wishbone bus and are initiated by either writing or reading from the user project address on the wishbone bus. The ``reg_wb_enable`` needs to be set to 1 in order to enable the wishbone bus.
