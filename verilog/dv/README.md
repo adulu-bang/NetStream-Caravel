@@ -130,3 +130,9 @@ The Cocotb simulation logs document the complete end-to-end execution of the int
 
 The final test summary confirms a passing grade, validating that the address decoding, Wishbone wrapper, and Caravel system integration are functionally sound.
 
+
+## Gate Level Simulation (GLS)
+
+The NetStream dataplane has been verified for bit-perfect functional parity between RTL and the synthesized Gate-Level Netlist. 
+
+For the complete verification suite, automation scripts, and detailed logs, please refer to the [GLS Documentation](./gls/README.md).
