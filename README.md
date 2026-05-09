@@ -1,5 +1,39 @@
 # NetStream: Caravel-Based Edge Network Packet-Processing Accelerator
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Current Status](#current-status)
+- [System Architecture](#system-architecture)
+  - [Packet Processing Pipeline](#packet-processing-pipeline)
+  - [Key Architectural Characteristics](#key-architectural-characteristics)
+  - [System Summary](#system-summary)
+- [Block Diagram Of Architecture](#block-diagram-of-architecture)
+- [Verification and Validation](#verification-and-validation)
+  - [RTL Verification](#rtl-verification)
+  - [FPGA Validation](#fpga-validation)
+  - [Caravel Integration Verification](#caravel-integration-verification)
+- [ASIC Implementation Results (Dataplane Macro)](#asic-implementation-results-dataplane-macro)
+  - [Backend Architecture](#backend-architecture)
+  - [Physical Design Summary](#physical-design-summary)
+  - [Timing Results](#timing-results)
+  - [Routing and Physical Verification](#routing-and-physical-verification)
+  - [Power and IR-Drop Analysis](#power-and-ir-drop-analysis)
+- [Caravel User Project Wrapper Hardening](#caravel-user-project-wrapper-hardening)
+  - [Wrapper-Level Integration Summary](#wrapper-level-integration-summary)
+  - [Timing Results (Wrapper)](#timing-results-1)
+  - [Routing and Physical Verification (Wrapper)](#routing-and-physical-verification-1)
+  - [Power and IR-Drop Analysis (Wrapper)](#power-and-ir-drop-analysis-1)
+- [System-Level PCB Integration (KiCAD)](#system-level-pcb-integration-kicad)
+- [Deliverables](#deliverables)
+- [Target Applications](#target-applications)
+- [System Feasibility and Bill of Materials (BOM)](#system-feasibility-and-bill-of-materials-bom)
+- [Timeline](#timeline)
+- [License](#license)
+- [Author](#author)
+
+---
+
 ## Overview
 
 NetStream is a hardware-accelerated network packet-processing engine designed for edge IoT and industrial gateway applications, implemented within the Caravel SoC framework.
@@ -38,7 +72,7 @@ Unlike traditional hardware-accelerated networking solutions such as SmartNICs a
 | Verification of register writes from Caravel CPU to TCAM and action memories using Cocotb and custom firmware | Completed |
 | Hardening of `user_project_wrapper` with dataplane macro | Completed |
 | Caravel precheck | Completed (13/13 PASS) |
-| PCBA Integration | In Progress |
+| PCBA Integration | Baseline Design Completed |
 ---
 
 Precheck status: All precheck steps has been passed :)
@@ -288,10 +322,6 @@ The dataplane macro was successfully integrated and hardened within the `user_pr
 
 ---
 
-
-
-
-
 # ASIC Implementation Results (Dataplane Macro)
 
 The NetStream dataplane was implemented using the OpenLane RTL-to-GDSII flow targeting the SKY130 technology node.
@@ -497,65 +527,25 @@ Power-grid and IR-drop analysis indicate stable operation under nominal conditio
 
 ---
 
+# System-Level PCB Integration (KiCAD)
 
-## Current Status 
-
-The NetStream dataplane macro has been successfully integrated and hardened within the Caravel `user_project_wrapper`.
-
-Current progress includes:
-
-- Wrapper-level RTL-to-GDSII completion  
-- Nominal-TT corner timing closure  
-- Klayout DRC/LVS-clean implementation  
-- Wishbone-connected control-plane integration  
-
-Final Caravel precheck and additional multi-corner optimization are currently in progress.
-
-
----
-
-# System-Level PCB Integration
-
-To demonstrate deployment feasibility beyond standalone ASIC implementation, a system-level PCB integration architecture was developed for NetStream. It is being implemented on EasyEDA.
+To demonstrate deployment feasibility beyond standalone ASIC implementation, a system-level PCB integration architecture was developed for NetStream. It is being implemented on KiCAD.
 
 The proposed hardware platform integrates the Caravel-based NetStream ASIC with an external Ethernet PHY and an FPGA-based Ethernet MAC subsystem. 
 
 The FPGA acts as a lightweight bridge between the Ethernet PHY and the NetStream datapath by:
 
 - Implementing the Ethernet MAC layer  
-- Handling RMII communication with the PHY  
+- Handling RGMII communication with the PHY  
 - Converting Ethernet frames into the streaming datapath interface required by NetStream  
 
 The NetStream ASIC performs hardware-accelerated packet parsing, classification, and action execution, while the Caravel RISC-V management processor configures TCAM rules and action-memory entries through the Wishbone control interface.
 
----
 
-## EasyEDA Schematic
+#### **[The complete PCB related files can be found here](./pcb)**
 
-![System-level PCB integration architecture for NetStream](pcb/PCBSchematic.png)
-
-The complete system architecture is organized as follows:
-
-```text
-RJ45 Connector
-       │
-       ▼
-Ethernet PHY (LAN8720)
-       │ RMII
-       ▼
-FPGA MAC Subsystem
-(MAC + Stream Bridge)
-       │ Streaming Interface
-       ▼
-NetStream ASIC
-(Caravel-based)
-```
 
 ---
-
-
-
-
 
 
 ## Deliverables
@@ -641,13 +631,14 @@ Tapeout and fabrication costs are excluded from the BOM, as fabrication is assum
 | Component | Description | Component | Estimated Cost (USD) |
 |---|---|---|---|
 | NetStream ASIC (Caravel-based) | Hardware packet-processing accelerator | MPW fabricated chip | Excluded |
-| Ethernet PHY | Physical-layer Ethernet interface | LAN8720, DP83848 | 2 – 5 |
-| FPGA (MAC subsystem) | Ethernet MAC + stream bridge | Lattice iCE40 / ECP5 | 8 – 20 |
-| FPGA Configuration Flash | FPGA boot configuration storage | W25Q128 | 1 – 3 |
-| RJ45 + Magnetics | Ethernet connector interface | Integrated MagJack | 2 – 6 |
-| Power Management | Regulators and filtering circuitry | LDO/DC-DC modules | 3 – 8 |
-| Oscillator and Clocking | System and RMII clock generation | 25/50 MHz oscillator | 1 – 3 |
-| PCB and Passive Components | PCB fabrication and passives | 4-layer PCB | 10 – 25 |
+| ASIC Configuration Flash | ASIC Storage (32Mbit) | W25Q32 | 1 - 2 |  
+| Ethernet PHY | Physical-layer RGMII Ethernet interface | KSZ9031 | 4 - 6 |
+| FPGA (MAC subsystem) | Ethernet MAC + stream bridge | Artix-7 XC7A100T | 165 - 170 |
+| FPGA Configuration Flash | FPGA boot configuration storage (128Mbit) | W25Q128 | 1 – 3 |
+| RJ45 + Magnetics | Ethernet connector interface (MagJack) | JK0654219 | 18 – 20 |
+| Power Management | Buck converters and filtering circuitry | TPS62172, TPS54302, TPS6213, TPS54620 | 10 – 12 |
+| Oscillator and Clocking | System and RGMII clock generation | ASDMB 40 MHz | 1 – 3 |
+| PCB and Passive Components | PCB fabrication and passives | 4-layer PCB | 50 – 100 |
 
 ---
 
@@ -656,7 +647,7 @@ Tapeout and fabrication costs are excluded from the BOM, as fabrication is assum
 | Configuration | Estimated Cost (USD) |
 |---|---|
 | Minimal prototype platform | ~25 – 45 |
-| FPGA-enhanced development platform | ~40 – 70 |
+| FPGA-enhanced development platform | ~280 – 290 |
 
 ---
 
@@ -692,4 +683,3 @@ Apache 2.0
 Adhitya Santhanam
 
 ---
-
