@@ -195,6 +195,7 @@ Configuration and control are performed through memory-mapped Wishbone registers
 
 NetStream has been functionally verified across RTL simulation, FPGA deployment, and ASIC implementation stages to validate correct packet-processing behavior, datapath synchronization, and system-level integration.
 
+#### **[The complete Verification and Waveform Report can be found here.](./verilog/dv/README.md)**
 ---
 
 ## RTL Verification 
